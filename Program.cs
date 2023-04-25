@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bezdzione.Constants;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace Bezdzione
@@ -7,8 +8,10 @@ namespace Bezdzione
     {
         public static void Main()
         {
-            RestResponse response = HTTPClient.SendHTTPRequest("v1/regions", Method.Get);
+            //RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetRegions", Method.Get);
+            RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetPlans, Method.Get);
 
+            //Bandymas isvesti planus, ju kategorijas ir galimus regionus
             if (response.IsSuccessful)
             {
                 if (response.Content != null)
@@ -18,8 +21,13 @@ namespace Bezdzione
                     {
                         foreach (var item in data)
                         {
-                            var value = item.slug;
-                            Console.WriteLine(value);
+                            Console.Write(item.slug + ", " + item.category + ", ");
+
+                            foreach(var region in item.available_regions)
+                            {
+                                Console.Write(region.slug + " ");
+                            }
+                            Console.WriteLine("");
                         }
                     }
                 }             
