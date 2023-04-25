@@ -1,32 +1,28 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
-using Microsoft.Extensions.Configuration;
 
 namespace Bezdzione
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            IConfiguration config = builder.Build();
+            RestResponse response = HTTPClient.SendHTTPRequest("v1/regions", Method.Get);
 
-            var client = new RestClient("https://api.cherryservers.com/");
-            var request = new RestRequest("v1/regions", Method.Get);
-            request.AddHeader("Authorization", "Bearer " + config["API_KEY"]);
-
-            var response = client.Execute(request);
-
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            if (response.IsSuccessful)
             {
-                List<Region> regions = JsonConvert.DeserializeObject<List<Region>>(response.Content);
-
-                foreach (var r in regions)
+                if (response.Content != null)
                 {
-                    Console.WriteLine(r.Slug);
-                }
-                
+                    dynamic? data = JsonConvert.DeserializeObject(response.Content);
+                    if (data != null)
+                    {
+                        foreach (var item in data)
+                        {
+                            var value = item.slug;
+                            Console.WriteLine(value);
+                        }
+                    }
+                }             
             }
             else
             {
