@@ -1,42 +1,22 @@
-﻿using Bezdzione.Constants;
-using Newtonsoft.Json;
-using RestSharp;
-
+﻿using Bezdzione.Data;
 namespace Bezdzione
 {
     public class Program
     {
         public static void Main()
         {
-            //RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetRegions", Method.Get);
-            RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetPlans, Method.Get);
+            PlanList AllPlans = PlanList.GetPlans();
+            List<Plan> RegionPlans = AllPlans.GetPlansFromRegion("us_chicago_1");
 
-            //Bandymas isvesti planus, ju kategorijas ir galimus regionus
-            if (response.IsSuccessful)
+            Console.WriteLine(RegionPlans.Count);
+            Console.WriteLine(AllPlans.Plans.Count);
+            if (RegionPlans != null)
             {
-                if (response.Content != null)
+                foreach (Plan plan in RegionPlans)
                 {
-                    dynamic? data = JsonConvert.DeserializeObject(response.Content);
-                    if (data != null)
-                    {
-                        foreach (var item in data)
-                        {
-                            Console.Write(item.slug + ", " + item.category + ", ");
-
-                            foreach(var region in item.available_regions)
-                            {
-                                Console.Write(region.slug + " ");
-                            }
-                            Console.WriteLine("");
-                        }
-                    }
-                }             
-            }
-            else
-            {
-                Console.WriteLine("Error: " + response.ErrorMessage);
-            }
-
+                    plan.ShowInfo();
+                }
+            }       
         }
     }
 }
