@@ -1,6 +1,6 @@
 ﻿namespace Bezdzione.Data
 {
-    internal class Image
+    public class Image
     {
         public string? Slug { get; set; }
     }

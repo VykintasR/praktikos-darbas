@@ -4,14 +4,20 @@ using RestSharp;
 
 namespace Bezdzione.Data
 {
-    internal class PlanList
+    public class PlanList
     {
-        public List<Plan>? Plans { get; }
+        public List<Plan>? Plans { get;}
 
         private PlanList()
         {
             Plans = new List<Plan>();
         }
+
+        private PlanList(List<Plan>? plans)
+        {
+            Plans = plans;
+        }
+
         private PlanList(string jsonContent)
         {
             if (jsonContent != null)
@@ -25,7 +31,7 @@ namespace Bezdzione.Data
             }
         }
 
-        public static PlanList GetPlans()
+        public static PlanList GetAllPlans()
         {
             RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetPlans, Method.Get);
             string? content = response.Content;
@@ -33,11 +39,32 @@ namespace Bezdzione.Data
             return content == null ? new PlanList() : new PlanList(content);
         }
 
-        public List<Plan> GetPlansFromRegion(string regionSlug)
+        public PlanList GetPlansFromRegion(string regionSlug)
         {
             return Plans != null
-                ? Plans.Where(plan => plan.Regions != null && plan.Regions.Any(region => region.Slug == regionSlug)).ToList()
-                : new List<Plan>();
+                ? new PlanList(Plans.Where(plan => plan.Regions != null && plan.Regions.Any(region => region.Slug == regionSlug)).ToList())
+                : new PlanList();
+        }
+
+        public PlanList GetPlan(int id)
+        {
+            return Plans != null
+               ? new PlanList(Plans.Where(plan => plan.Id.Equals(id)).ToList())
+               : new PlanList();
+        }
+
+        public PlanList GetPlansWithCategory(string category) 
+        {
+            return Plans != null
+               ? new PlanList(Plans.Where(plan => plan.Category != null && plan.Category.Equals(category)).ToList())
+               : new PlanList();
+        }
+
+        public PlanList GetPlansWithImage(string imageSlug)
+        {
+            return Plans != null
+               ? new PlanList(Plans.Where(plan => plan.Images != null && plan.Images.Any(image => image.Slug == imageSlug)).ToList())
+               : new PlanList();
         }
 
     }

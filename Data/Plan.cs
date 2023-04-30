@@ -4,7 +4,7 @@ using RestSharp;
 
 namespace Bezdzione.Data
 {
-    internal class Plan
+    public class Plan
     {
         public int Id { get; set; }
         public string? Slug { get; set; }
@@ -23,7 +23,7 @@ namespace Bezdzione.Data
 
         public void ShowInfo()
         {
-            Console.Write("Slug: " + Slug + " Category: " +  Category + " ");
+            Console.Write("ID " + Id + " Slug: " + Slug + " Category: " +  Category + " ");
 
             if (Regions != null)
             {

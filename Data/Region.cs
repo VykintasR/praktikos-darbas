@@ -1,6 +1,6 @@
 ﻿namespace Bezdzione.Data
 {
-    internal class Region
+    public class Region
     {
         public string? Slug { get; set; }
     }
