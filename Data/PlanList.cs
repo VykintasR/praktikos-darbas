@@ -8,7 +8,7 @@ namespace Bezdzione.Data
     {
         public List<Plan>? Plans { get;}
 
-        private PlanList()
+        public PlanList()
         {
             Plans = new List<Plan>();
         }

@@ -6,18 +6,19 @@ namespace BezdzioneTests
     [TestFixture]
     public class PlanListTests
     {
-        private PlanList _planList;
+        private PlanList _planList = new PlanList();
 
         [SetUp]
         public void Setup()
         {
-            _planList = PlanList.GetAllPlans();
+             _planList = PlanList.GetAllPlans();         
         }
+
         [Test]
         public void GetAllPlans_ReturnsNonNullObject()
         {
             PlanList plans = _planList;
-            Assert.IsNotNull(plans);
+            Assert.That(plans, Is.Not.Null);
         }
 
         [Test]
@@ -39,7 +40,7 @@ namespace BezdzioneTests
             }
             else
             {
-                Assert.Fail("The Plans collection in plansFromRegion should not be null");
+                Assert.Fail("The Plans collection in plansWithCategory should not be null");
             }
         }
 
@@ -60,9 +61,10 @@ namespace BezdzioneTests
             }
             else
             {
-                Assert.Fail("The Plans collection in plansFromRegion should not be null");
+                Assert.Fail("The Plans collection in plansWithCategory should not be null");
             }
         }
+
         [Test]
         [TestCase(625)]
         public void GetPlan_ReturnsNonNullObject(int planId)
@@ -111,11 +113,97 @@ namespace BezdzioneTests
             // Assert
             if (plan.Plans != null)
             {
-                Assert.IsTrue(plan.Plans.All(p => p.Slug != null && p.Slug.Equals(planId)));
+                Assert.IsTrue(plan.Plans.All(p => p.Id.Equals(planId)));
             }
             else
             {
                 Assert.Fail("The Plans collection should not be null");
+            }
+        }
+
+        [Test]
+        [TestCase("lightweight")]
+        public void GetPlansWithCategory_ReturnsCorrectPlans(string category)
+        {
+            // Arrange
+            PlanList allPlans = _planList;
+
+            // Act
+            PlanList plansWithCategory = allPlans.GetPlansWithCategory(category);
+
+            // Assert
+            if (plansWithCategory.Plans != null)
+            {
+               
+                Assert.That(plansWithCategory.Plans.All(plan => plan.Category != null && plan.Category.Equals(category)));
+            }
+            else
+            {
+                Assert.Fail("The Plans collection in plansWithCategory should not be null");
+            }
+        }
+
+        [Test]
+        [TestCase("invalid_category")]
+        public void GetPlansWithCategory_ReturnsEmptyListWithInvalidCategory(string category)
+        {
+            // Arrange
+            PlanList allPlans = _planList;
+
+            // Act
+            PlanList plansWithCategory = allPlans.GetPlansWithCategory(category);
+
+            // Assert
+            if (plansWithCategory.Plans != null)
+            {
+                Assert.That(plansWithCategory.Plans, Is.Empty);
+            }
+            else
+            {
+                Assert.Fail("The Plans collection in plansWithCategory should not be null");
+            }
+        }
+
+        [Test]
+        [TestCase("self_install")]
+        public void GetPlansWithImage_ReturnsCorrectPlans(string imageSlug)
+        {
+            // Arrange
+            PlanList allPlans = _planList;
+
+            // Act
+            PlanList plansWithImage = allPlans.GetPlansWithCategory(imageSlug);
+
+            // Assert
+            if (plansWithImage.Plans != null)
+            {
+
+                Assert.That(plansWithImage.Plans.All(plan => plan.Category != null && plan.Category.Equals(imageSlug)));
+            }
+            else
+            {
+                Assert.Fail("The Plans collection in plansWithImage should not be null");
+            }
+        }
+
+        [Test]
+        [TestCase("invalid_image")]
+        public void GetPlansWithImage_ReturnsEmptyListWithInvalidImage(string imageSlug)
+        {
+            // Arrange
+            PlanList allPlans = _planList;
+
+            // Act
+            PlanList plansWithImage = allPlans.GetPlansWithCategory(imageSlug);
+
+            // Assert
+            if (plansWithImage.Plans != null)
+            {
+                Assert.That(plansWithImage.Plans, Is.Empty);
+            }
+            else
+            {
+                Assert.Fail("The Plans collection in plansWithImage should not be null");
             }
         }
     }
