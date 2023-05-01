@@ -6,7 +6,7 @@ namespace Bezdzione.Data
 {
     public class PlanList
     {
-        public List<Plan>? Plans { get;}
+        public List<Plan>? Plans { get; set; }
 
         public PlanList()
         {
@@ -29,6 +29,11 @@ namespace Bezdzione.Data
             {
                 Plans = new List<Plan>();
             }
+        }
+        public static IEnumerable<int> GetAllPlanIds()
+        {
+            PlanList AllPlans = PlanList.GetAllPlans();
+            return AllPlans.Plans != null ? AllPlans.Plans.Select(plan => plan.Id) : Enumerable.Empty<int>();
         }
 
         public static PlanList GetAllPlans()

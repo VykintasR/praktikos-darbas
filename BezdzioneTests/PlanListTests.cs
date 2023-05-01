@@ -6,12 +6,18 @@ namespace BezdzioneTests
     [TestFixture]
     public class PlanListTests
     {
-        private PlanList _planList = new PlanList();
-
+        private static PlanList _planList = new();
+        
         [SetUp]
         public void Setup()
         {
-             _planList = PlanList.GetAllPlans();         
+            _planList = PlanList.GetAllPlans();
+        }
+
+        private static IEnumerable<string?> GetValidRegionSlugs()
+        {
+            RegionList regionList = RegionList.GetAllRegions();
+            return regionList.Regions != null ? regionList.Regions.Select(r => r.Slug) : Enumerable.Empty<string?>();
         }
 
         [Test]
@@ -22,9 +28,7 @@ namespace BezdzioneTests
         }
 
         [Test]
-        [TestCase("eu_nord_1")]
-        [TestCase("eu_west_1")]
-        [TestCase("us_chicago_1")]
+        [TestCaseSource(nameof(GetValidRegionSlugs))]
         public void GetPlansFromRegion_ReturnsCorrectPlans(string regionSlug)
         {
             // Arrange
@@ -40,7 +44,7 @@ namespace BezdzioneTests
             }
             else
             {
-                Assert.Fail("The Plans collection in plansWithCategory should not be null");
+                Assert.Fail("The Plans collection in plansFromRegion should not be null");
             }
         }
 
@@ -75,8 +79,8 @@ namespace BezdzioneTests
             // Act
             PlanList plan = allPlans.GetPlan(planId);
 
-            //Assert
-            Assert.That(plan, Is.Not.Null);
+            // Assert
+            Assert.That(plan, Is.Not.Null, $"Failed for plan id {planId}");
         }
 
         [Test]

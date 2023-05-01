@@ -1,6 +1,6 @@
 ﻿namespace Bezdzione.Constants
 {
-    internal static class API_URLS
+    public static class API_URLS
     {
         public static string BASE_API_URL = "https://api.cherryservers.com/";
         public static string GetRegions = "v1/regions";

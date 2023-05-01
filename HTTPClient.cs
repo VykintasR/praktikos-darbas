@@ -3,10 +3,10 @@ using RestSharp;
 
 namespace Bezdzione
 {
-    internal static class HTTPClient
+    public static class HTTPClient
     {
 
-        internal static RestResponse SendHTTPRequest(string endpointURL, Method method)
+        public static RestResponse SendHTTPRequest(string endpointURL, Method method)
         {
             RestClient client = new RestClient(API_URLS.BASE_API_URL);
             RestRequest request = new RestRequest(endpointURL,method);
