@@ -1,18 +1,21 @@
-﻿using Bezdzione.Data;
-using RestSharp;
+﻿using BezdzioneTests;
 
 namespace Bezdzione
 {
     public class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
-            Server defaultServer = new Server();
-
-            RestResponse response = defaultServer.Deploy();
-
-            Console.WriteLine(response.Content);
-
+            Console.WriteLine("Vykdomas testas....");
+            await Task.Run(async () =>
+            {
+                ServerTests serverTests = new ServerTests();
+                await serverTests.TestDefaultServerDeployment();
+            });
+            Console.WriteLine("Testas įvykdytas.");
+            Console.WriteLine("Press Enter key to exit....");
+            Console.ReadLine();
+            Environment.Exit(0);
         }
     }
 }
