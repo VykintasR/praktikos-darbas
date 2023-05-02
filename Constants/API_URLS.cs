@@ -6,5 +6,6 @@
         public static string GetRegions = "v1/regions";
         public static string GetPlans = "v1/teams/" + Configuration.GetSetting("TEAM_ID") + "/plans";
         public static string GetPlanImages = GetPlans + "/{0}" + "/images";
+        public static string RequestServer = "v1/projects/" + Configuration.GetSetting("PROJECT_ID") + "/servers";
     }
 }

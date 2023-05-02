@@ -1,18 +1,26 @@
 ﻿using Bezdzione.Constants;
+using Newtonsoft.Json;
 using RestSharp;
 
 namespace Bezdzione
 {
     public static class HTTPClient
     {
-
-        public static RestResponse SendHTTPRequest(string endpointURL, Method method)
+        public static RestClient client = new RestClient(API_URLS.BASE_API_URL);
+        public static RestResponse SendHTTPRequest(string endpointURL, Method method, Server? server = null)
         {
-            RestClient client = new RestClient(API_URLS.BASE_API_URL);
+            RestResponse response = new RestResponse();
             RestRequest request = new RestRequest(endpointURL,method);
             request.AddHeader("Authorization", "Bearer " + Configuration.GetSetting("API_KEY"));
 
-            return client.Execute(request);
+            if(method == Method.Post)
+            {
+                string json = JsonConvert.SerializeObject(server);
+                request.AddJsonBody(json);
+            }
+        
+            response = client.Execute(request);
+            return response;
         }
     }
 }

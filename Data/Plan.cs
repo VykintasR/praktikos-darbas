@@ -42,7 +42,7 @@ namespace Bezdzione.Data
                     Console.WriteLine(i.Slug);
                 }
                 Console.WriteLine("");
-            }       
+            }
         }
     }   
 }
