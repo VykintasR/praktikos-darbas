@@ -9,9 +9,9 @@ namespace Bezdzione
         {
             Server defaultServer = new Server();
 
-            RestResponse response = defaultServer.Request();
+            RestResponse response = defaultServer.Deploy();
 
-            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.Content);
 
         }
     }

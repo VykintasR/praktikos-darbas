@@ -2,48 +2,99 @@
 using Bezdzione.Constants;
 using RestSharp;
 using Newtonsoft.Json;
-using NUnit.Framework.Internal;
+using Bezdzione.Logs;
 
 namespace Bezdzione
 {
     public class Server
     {
-
+        [JsonIgnore]
+        public int Id { get; set; }
+        [JsonIgnore]
+        public string? Name { get; set; }
+        [JsonIgnore]
+        public string? CreatedRegion { get; set; }
+        [JsonIgnore]    
+        public string? CreatedPlan { get; set;}
+        [JsonIgnore]
+        public string? CreatedImage { get; set;}
         [JsonProperty("plan")]
-        public string? PlanSlug { get; set; }
+        public string? RequestPlanSlug { get; set; }
         [JsonProperty("image")]
-        public string? ImageSlug { get; set; }
+        public string? RequestImageSlug { get; set; }
         [JsonProperty("region")]
-        public string? RegionSlug { get; set; }
+        public string? RequestRegionSlug { get; set; }
       
         public Server() 
         {
             RegionList allRegions = RegionList.GetAllRegions();
             if(allRegions.Regions != null)
             {
-                RegionSlug = allRegions.Regions.ElementAt(1).Slug;
+                RequestRegionSlug = allRegions.Regions.ElementAt(0).Slug;
             }
 
-            if (RegionSlug != null)
+            if (RequestRegionSlug != null)
             {
-                PlanList regionPlans = PlanList.GetAllPlans().GetPlansFromRegion(RegionSlug);
+                PlanList regionPlans = PlanList.GetAllPlans().GetPlansFromRegion(RequestRegionSlug);
 
                 if (regionPlans.Plans != null)
                 {
-                    Plan firstPlan = regionPlans.Plans.ElementAt(1);
-                    PlanSlug = firstPlan.Slug;
+                    Plan firstPlan = regionPlans.Plans.ElementAt(0);
+                    RequestPlanSlug = firstPlan.Slug;
 
                     if (firstPlan.Images != null && firstPlan.Images.ElementAt(1) != null)
                     {
-                        ImageSlug = firstPlan.Images.ElementAt(1).Slug;
+                        RequestImageSlug = firstPlan.Images.ElementAt(0).Slug;
                     }
                 }
             }
         }
 
-        public RestResponse Request()
+        public RestResponse Deploy()
         {
-            return HTTPClient.SendHTTPRequest(API_URLS.RequestServer, Method.Post, this);
+            Logger.LogInfo(MessageFormatter.FormatServerRequest(this));
+            RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.RequestServer, Method.Post, this);
+            var responseJson = response.Content;
+            if (responseJson != null)
+            {
+                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
+
+                if (responseObj != null)
+                {
+                    this.Id = responseObj.id;
+                    this.Name = responseObj.hostname;
+                    this.CreatedPlan = responseObj.name;
+                    this.CreatedRegion = responseObj.region.slug;
+                    this.CreatedImage = responseObj.image;
+                }
+            }
+            return response;
+        }
+
+        public string GetState()
+        {
+            RestResponse response = HTTPClient.SendHTTPRequest(string.Format(API_URLS.RetrieveServerInfo, this.Id), Method.Get);
+            var responseJson = response.Content;
+            if (responseJson != null)
+            {
+                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
+
+                return responseObj != null ? (string)responseObj.state : "";
+            }
+            return "";
+        }
+
+        public string CheckImageAfterActivation()
+        {
+            RestResponse response = HTTPClient.SendHTTPRequest(string.Format(API_URLS.RetrieveServerInfo, this.Id), Method.Get);
+            var responseJson = response.Content;
+            if (responseJson != null)
+            {
+                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
+
+                return responseObj != null ? (string)responseObj.image : "";
+            }
+            return "";
         }
     }
 }
