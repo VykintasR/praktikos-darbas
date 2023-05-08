@@ -3,6 +3,7 @@ using Bezdzione.Logs;
 using Bezdzione.Request;
 using RestSharp;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace BezdzioneTests
 {
@@ -16,10 +17,18 @@ namespace BezdzioneTests
             Server server = new Server();
             int serverId = server.Deploy();
 
-            if (serverId < 0)
+            string parameterInfo = $"region: {server.Parameters.RegionSlug}, plan: {server.Parameters.PlanSlug}, OS image: {server.Parameters.ImageSlug}";
+            switch (serverId)
             {
-                Assert.Fail("Failed to deploy the server.");
+                case > 0:
+                    Console.WriteLine(MessageFormatter.Info(MessageFormatter.RequestInfo(server.Parameters)));
+
+                    break;
+                default:
+                    Assert.Fail(MessageFormatter.Error($"Failed to deploy server with {parameterInfo}."));
+                    break;
             }
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -31,11 +40,11 @@ namespace BezdzioneTests
             {
                 if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(10))
                 {
-                    // if the maximum wait dateTime is exceeded, log an error and fail the test
-                    FileLogger.Log(MessageFormatter.Error("Server took too long to become active."));
+                    // if the maximum wait format is exceeded, log an error and fail the test
+                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
                     server.UpdateInfo();
-                    RestResponse timeoutDelete = server.Delete();
-                    Assert.Fail("Server took too long to become active.");
+                    server.Delete();
+                    Assert.Fail("Timeout - server took more than 10mins to become active.");
                 }
 
                 await Task.Delay(5000); // Wait 5 seconds before checking server state again
@@ -45,27 +54,31 @@ namespace BezdzioneTests
             stopwatch.Stop();
             server.UpdateInfo();
 
+            //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();
             FileLogger.Log(response.IsSuccessStatusCode ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the server"));
-            Assert.Multiple(() =>
-            {
-                //Assert that server became active within 10 minutes
-                Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
-                Assert.That(server.Id, Is.GreaterThan(0), "Failed to deploy the server.");
-            });
         }
 
         public async Task TestRandomServerDeployment()
-        {
+        {   
+            // Deploy server
             Server server = new Server(new RandomParameterGenerator().GetRandomParameters());
             int serverId = server.Deploy();
 
-            if (serverId < 0)
+            string parameterInfo = $"region: {server.Parameters.RegionSlug}, plan: {server.Parameters.PlanSlug}, OS image: {server.Parameters.ImageSlug}";
+            switch (serverId)
             {
-                Assert.Fail("Failed to deploy the server.");
+                case > 0:
+                    Console.WriteLine(MessageFormatter.Info(MessageFormatter.RequestInfo(server.Parameters)));
+
+                    break;
+                default:
+                    Assert.Fail(MessageFormatter.Error($"Failed to deploy server with {parameterInfo}."));
+                    break;
             }
 
             Stopwatch stopwatch = new Stopwatch();
@@ -79,11 +92,11 @@ namespace BezdzioneTests
             {
                 if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(10))
                 {
-                    // if the maximum wait dateTime is exceeded, log an error and fail the test
-                    FileLogger.Log(MessageFormatter.Error("Server took too long to become active."));
+                    // if the maximum wait format is exceeded, log an error and fail the test
+                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
                     server.UpdateInfo();
-                    RestResponse timeoutDelete = server.Delete();
-                    Assert.Fail("Server took too long to become active.");
+                    server.Delete();
+                    Assert.Fail("Timeout - server took more than 10mins to become active.");
                 }
 
                 await Task.Delay(5000); // Wait 5 seconds before checking server state again
@@ -93,17 +106,13 @@ namespace BezdzioneTests
             stopwatch.Stop();
             server.UpdateInfo();
 
+            //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();
             FileLogger.Log(response.IsSuccessStatusCode ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the server"));
-            Assert.Multiple(() =>
-            {
-                //Assert that server became active within 10 minutes
-                Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
-                Assert.That(server.Id, Is.GreaterThan(0), "Failed to deploy the server in time.");
-            });
         }
     }
 }

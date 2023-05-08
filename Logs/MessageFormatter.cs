@@ -5,14 +5,13 @@ namespace Bezdzione.Logs
 {
     public static class MessageFormatter
     {
-        private static string dateTime = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss}";
         public static string Info(string message)
         {
-            return $"{dateTime} INFO: {message}{Environment.NewLine}";
+            return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} INFO: {message}{Environment.NewLine}";
         }
         public static string Error(string message)
         {
-            return $"{dateTime} ERROR: {message}{Environment.NewLine}";
+            return $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} ERROR: {message}{Environment.NewLine}";
         }
 
         public static string RequestInfo(RequestParameters parameters)
