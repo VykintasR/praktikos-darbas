@@ -7,8 +7,7 @@
 
         public static void Log(string message)
         {
-            string logMessage = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} {message}{Environment.NewLine}";
-            File.AppendAllText(LogFilePath, logMessage);
+            File.AppendAllText(LogFilePath, message);
         }
     }
 }

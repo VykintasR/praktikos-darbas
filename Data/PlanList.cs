@@ -1,4 +1,5 @@
 ﻿using Bezdzione.Constants;
+using Bezdzione.Request;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -38,7 +39,7 @@ namespace Bezdzione.Data
 
         public static PlanList GetAllPlans()
         {
-            RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.GetPlans, Method.Get);
+            RestResponse response = HTTPClient.GetPlans();
             string? content = response.Content;
 
             return content == null ? new PlanList() : new PlanList(content);

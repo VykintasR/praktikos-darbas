@@ -1,4 +1,5 @@
 ﻿using Bezdzione.Constants;
+using Bezdzione.Request;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -16,7 +17,7 @@ namespace Bezdzione.Data
         { 
             get
             {
-                RestResponse response =  HTTPClient.SendHTTPRequest(string.Format(API_URLS.GetPlanImages, Slug), Method.Get);
+                RestResponse response = HTTPClient.GetPlanImages(Slug);
                 return response.Content != null ? JsonConvert.DeserializeObject<List<Image>>(response.Content) : new List<Image>();
             }
         }

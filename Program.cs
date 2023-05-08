@@ -6,7 +6,7 @@ namespace Bezdzione
     {
         public static async Task Main()
         {
-            Console.WriteLine("Vykdomas testas....");
+            Console.WriteLine("Vykdomas standartinio serverio diegimo testas....");
             await Task.Run(async () =>
             {
                 ServerTests serverTests = new ServerTests();
