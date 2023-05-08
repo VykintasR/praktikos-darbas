@@ -8,5 +8,6 @@
         public static string GetPlanImages = GetPlans + "/{0}" + "/images";
         public static string RequestServer = "v1/projects/" + Configuration.GetSetting("PROJECT_ID") + "/servers";
         public static string RetrieveServerInfo = "v1/servers/" + "{0}";
+        public static string DeleteServer = "v1/servers/" + "{0}";
     }
 }

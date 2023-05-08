@@ -11,16 +11,16 @@ namespace BezdzioneTests
         [Test]
         public async Task TestDefaultServerDeployment()
         {
-            // Deploy server
+            // DeployServer server
             Server server = new Server();
-            RestResponse response = server.Deploy();
+            RestResponse response = server.DeployServer();
 
             //Check the time for server to become active
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             //Check server state
-            string serverState = server.GetState();
+            string serverState = server.GetServerState();
             DateTime startTime = DateTime.Now; // get the current time
             while (serverState != "active")
             {
@@ -31,8 +31,8 @@ namespace BezdzioneTests
                     Assert.Fail("Server took too long to become active.");
                 }
 
-                await Task.Delay(5000); // Wait 10 seconds before checking server state again
-                serverState = server.GetState();
+                await Task.Delay(5000); // Wait 5 seconds before checking server state again
+                serverState = server.GetServerState();
             }
             stopwatch.Stop();
 
@@ -45,7 +45,18 @@ namespace BezdzioneTests
             {
                 Logger.LogInfo(MessageFormatter.FormatServerResponse(server, response));
                 Logger.LogInfo($"Server took {stopwatch.Elapsed} to become active");
-                // Assert that server became active within 10 minutes
+
+                await Task.Delay(15000);
+                RestResponse deletiooResponse = server.DeleteServer(server);
+                if (response.IsSuccessStatusCode)
+                {
+                    Logger.LogInfo($"Server successfully deleted.");
+                }
+                else
+                {
+                    Logger.LogError($"Failed to delete the server");
+                }
+                //Assert that server became active within 10 minutes
                 Assert.IsTrue(stopwatch.Elapsed < TimeSpan.FromMinutes(10), $"Server took {stopwatch.Elapsed} to become active");
             }
             else

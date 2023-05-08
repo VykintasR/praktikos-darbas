@@ -50,7 +50,7 @@ namespace Bezdzione
             }
         }
 
-        public RestResponse Deploy()
+        public RestResponse DeployServer()
         {
             Logger.LogInfo(MessageFormatter.FormatServerRequest(this));
             RestResponse response = HTTPClient.SendHTTPRequest(API_URLS.RequestServer, Method.Post, this);
@@ -71,7 +71,7 @@ namespace Bezdzione
             return response;
         }
 
-        public string GetState()
+        public string GetServerState()
         {
             RestResponse response = HTTPClient.SendHTTPRequest(string.Format(API_URLS.RetrieveServerInfo, this.Id), Method.Get);
             var responseJson = response.Content;
@@ -95,6 +95,11 @@ namespace Bezdzione
                 return responseObj != null ? (string)responseObj.image : "";
             }
             return "";
+        }
+
+        public RestResponse DeleteServer(Server server)
+        {
+            return  HTTPClient.SendHTTPRequest(string.Format(API_URLS.DeleteServer, server.Id), Method.Delete);
         }
     }
 }
