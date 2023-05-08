@@ -8,7 +8,7 @@ namespace Bezdzione.Data
     public class Plan
     {
         public int Id { get; set; }
-        public string? Slug { get; set; }
+        public string Slug { get; set; } = string.Empty;
         public string? Category { get; set; }
         [JsonProperty("available_regions")]
         public List<Region>? Regions { get; set; }
@@ -24,7 +24,7 @@ namespace Bezdzione.Data
 
         public void ShowInfo()
         {
-            Console.Write("ID " + Id + " Slug: " + Slug + " Category: " +  Category + " ");
+            Console.Write("ID " + Id + " Slug: #" + Slug + "# Category: " +  Category + " ");
 
             if (Regions != null)
             {

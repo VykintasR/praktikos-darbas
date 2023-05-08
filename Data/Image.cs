@@ -2,6 +2,6 @@
 {
     public class Image
     {
-        public string? Slug { get; set; }
+        public string Slug { get; set; } = string.Empty;
     }
 }

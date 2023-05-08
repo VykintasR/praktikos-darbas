@@ -45,7 +45,7 @@ namespace Bezdzione.Data
             return content == null ? new PlanList() : new PlanList(content);
         }
 
-        public PlanList GetPlansFromRegion(string regionSlug)
+        public PlanList GetPlansFromRegion(string? regionSlug)
         {
             return Plans != null
                 ? new PlanList(Plans.Where(plan => plan.Regions != null && plan.Regions.Any(region => region.Slug == regionSlug)).ToList())

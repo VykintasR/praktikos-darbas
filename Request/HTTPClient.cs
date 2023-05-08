@@ -39,7 +39,6 @@ namespace Bezdzione.Request
         public static int DeployServer(RequestParameters parameters)
         {
             RestResponse response = SendHTTPRequest(API_URLS.RequestServer, Method.Post, parameters);
-
             var responseJson = response.Content;
             if (responseJson != null)
             {

@@ -26,10 +26,12 @@ namespace Bezdzione.Request
             Parameters = parameters;
         }
 
-        public void Deploy()
+        public int Deploy()
         {
+            string parameterInfo = $"region: {Parameters.RegionSlug}, plan: {Parameters.PlanSlug}, OS image: {Parameters.ImageSlug}";
             Id = HTTPClient.DeployServer(Parameters);
-            FileLogger.Log(Id == 0 ? MessageFormatter.Error("Failed to deploy server.") : MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
+            FileLogger.Log(Id == 0 ? MessageFormatter.Error($"Failed to deploy server with {parameterInfo}.") : MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
+            return Id;
         }
 
         public string GetState()

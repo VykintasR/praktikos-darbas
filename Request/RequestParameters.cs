@@ -5,8 +5,6 @@ namespace Bezdzione.Request
 {
     public class RequestParameters
     {
-        [JsonIgnore]
-        RegionList AvailableRegions;
         [JsonProperty("plan")]
         public string? PlanSlug { get; private set; }
         [JsonProperty("image")]
@@ -16,12 +14,11 @@ namespace Bezdzione.Request
 
         public RequestParameters()
         {
-            AvailableRegions = RegionList.GetAllRegions();
+
         }
 
         public RequestParameters(string? regionSlug, string? planSlug, string imageSlug)
         {
-            AvailableRegions = RegionList.GetAllRegions();
             SetRegion(regionSlug);
             SetPlan(planSlug);
             SetImage(imageSlug);
@@ -29,6 +26,7 @@ namespace Bezdzione.Request
 
         public void SetDefaultParameters()
         {
+            RegionList AvailableRegions = RegionList.GetAllRegions();
             if (AvailableRegions.Regions != null)
             {
                 SetRegion(AvailableRegions.Regions.ElementAt(0).Slug);
