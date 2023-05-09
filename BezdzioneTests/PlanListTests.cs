@@ -77,7 +77,7 @@ namespace BezdzioneTests
             PlanList allPlans = _planList;
 
             // Act
-            PlanList plan = allPlans.GetPlan(planId);
+            PlanList plan = allPlans.GetPlanByID(planId);
 
             // Assert
             Assert.That(plan, Is.Not.Null, $"Failed for plan id {planId}");
@@ -91,7 +91,7 @@ namespace BezdzioneTests
             PlanList allPlans = _planList;
 
             // Act
-            PlanList plan = allPlans.GetPlan(planId);
+            PlanList plan = allPlans.GetPlanByID(planId);
 
             // Assert
             if (plan.Plans != null)
@@ -112,7 +112,7 @@ namespace BezdzioneTests
             PlanList allPlans = _planList;
 
             // Act
-            PlanList plan = allPlans.GetPlan(planId);
+            PlanList plan = allPlans.GetPlanByID(planId);
 
             // Assert
             if (plan.Plans != null)

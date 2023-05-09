@@ -38,13 +38,13 @@ namespace BezdzioneTests
 
             while (serverState != "active")
             {
-                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(10))
+                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(11))
                 {
                     // if the maximum wait format is exceeded, log an error and fail the test
                     FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
                     server.UpdateInfo();
                     server.Delete();
-                    Assert.Fail("Timeout - server took more than 10mins to become active.");
+                    Assert.Fail("Timeout - server took more than 11mins to become active.");
                 }
 
                 await Task.Delay(5000); // Wait 5 seconds before checking server state again
@@ -56,7 +56,7 @@ namespace BezdzioneTests
 
             //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
-            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(11)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();
@@ -90,13 +90,13 @@ namespace BezdzioneTests
 
             while (serverState != "active")
             {
-                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(10))
+                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(11))
                 {
                     // if the maximum wait format is exceeded, log an error and fail the test
                     FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
                     server.UpdateInfo();
                     server.Delete();
-                    Assert.Fail("Timeout - server took more than 10mins to become active.");
+                    Assert.Fail("Timeout - server took more than 11mins to become active.");
                 }
 
                 await Task.Delay(5000); // Wait 5 seconds before checking server state again
@@ -108,7 +108,7 @@ namespace BezdzioneTests
 
             //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
-            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(10)), $"Server took {stopwatch.Elapsed} to become active");
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(11)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();

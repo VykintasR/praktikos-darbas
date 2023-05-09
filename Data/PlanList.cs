@@ -1,5 +1,4 @@
-﻿using Bezdzione.Constants;
-using Bezdzione.Request;
+﻿using Bezdzione.Request;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -52,10 +51,17 @@ namespace Bezdzione.Data
                 : new PlanList();
         }
 
-        public PlanList GetPlan(int id)
+        public PlanList GetPlanByID(int id)
         {
             return Plans != null
                ? new PlanList(Plans.Where(plan => plan.Id.Equals(id)).ToList())
+               : new PlanList();
+        }
+
+        public PlanList GetPlansBySlug(string slug)
+        {
+            return Plans != null
+               ? new PlanList(Plans.Where(plan => plan.Slug.Equals(slug)).ToList())
                : new PlanList();
         }
 
