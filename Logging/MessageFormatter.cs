@@ -9,7 +9,7 @@ namespace Bezdzione.Logs
         public static string Info(string message) => $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} INFO: {message}{Environment.NewLine}";
         public static string Error(string message) => $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} ERROR: {message}{Environment.NewLine}";
 
-        public static string RequestInfo(Parameters parameters) => $"Trying to deploy server with region: {parameters.RegionSlug}, plan: {parameters.PlanSlug}, image: {parameters.ImageSlug}";
+        public static string RequestInfo(Parameters parameters) => $"Trying to deploy server in {parameters.Timeout} minutes with region: {parameters.RegionSlug}, plan: {parameters.PlanSlug}, image: {parameters.ImageSlug}";
 
         public static string ResponseInfo(dynamic response, HttpStatusCode status)
         {

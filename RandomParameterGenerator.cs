@@ -17,9 +17,7 @@ namespace Bezdzione
         {
             
             PlanList allPlans = PlanList.GetAllPlans();
-
-            
-
+            Console.WriteLine(allPlans.Plans.Count);
             Region? randomRegion = RandomRegion();
             if (randomRegion != null)
             {

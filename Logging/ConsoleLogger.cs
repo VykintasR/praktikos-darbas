@@ -13,7 +13,7 @@ namespace Bezdzione.Logs
         public static void TestFail(string message) => Console.WriteLine($"Test failed. Reason: {message}");
         public static void InvalidTimeout() => Console.WriteLine($"Invalid value for timeout. Using default timeout.");
         public static void UnknownOption() => Console.WriteLine($"Unknown option. Valid options are: default, random, category, plan, image, region, and timeout.");
-        public static void IncompatibleOptions() => Console.WriteLine($"Either only one of --random or --default can be specified, or the four other options.");
+        public static void IncompatibleOptions() => Console.WriteLine($"Either only --random can be specified, or any combination of the four other options.");
         public static void TestingComplete() => Console.WriteLine($"Testing done. Press Enter key to exit....");
     }
 }

@@ -11,6 +11,7 @@ namespace Bezdzione.CLI
             int i = 0;
             while (i < testCount)
             {
+                serverTests.SetUp(new Server(RandomParameterGenerator.GetRandomParameters(timeout)));
                 ConsoleLogger.TestStart("random", serverTests.GetServerParameters());
                 await ExecuteServerDeploymentTest(serverTests);
                 ConsoleLogger.TestCompleted();
@@ -20,6 +21,7 @@ namespace Bezdzione.CLI
 
         public static async Task RunDefaultTest(ServerTests serverTests, int? timeout)
         {
+            serverTests.SetUp(new Server(new Parameters(timeout)));
             ConsoleLogger.TestStart("default", new Parameters(timeout));
             await ExecuteServerDeploymentTest(serverTests);
             ConsoleLogger.TestCompleted();

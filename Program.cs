@@ -15,7 +15,6 @@ namespace Bezdzione
 
             if (options.Random)
             {
-                serverTests.SetUp(new Server(RandomParameterGenerator.GetRandomParameters(options.Timeout)));
                 await TestRunner.RunRandomTest(serverTests, 10, options.Timeout);
             }
             else if (options.InputOrder.Count > 0)
@@ -40,7 +39,6 @@ namespace Bezdzione
             }
             else
             {
-                serverTests.SetUp(new Server(new Parameters(options.Timeout)));
                 await TestRunner.RunDefaultTest(serverTests, options.Timeout);
             }
             ConsoleLogger.TestingComplete();

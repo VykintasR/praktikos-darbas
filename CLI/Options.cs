@@ -20,9 +20,6 @@ namespace Bezdzione.CLI
         [Option("random", HelpText = "Perform a random server deployment test.")]
         public bool Random { get; set; }
 
-        [Option("default", HelpText = "Perform a default server deployment test.")]
-        public bool Default { get; set; }
-
         [Option("timeout", HelpText = "Timeout in minutes for running tests.")]
         public int? Timeout { get; set; } = null;
 
@@ -35,27 +32,22 @@ namespace Bezdzione.CLI
             var result = parser.ParseArguments<Options>(args);
 
             bool hasRandom = false;
-            bool hasDefault = false;
             bool hasOtherOptions = false;
-            bool randomOrDefaultPresent = false;
 
             result.WithParsed(o =>
             {
                 hasRandom = o.Random;
-                hasDefault = o.Default;
-                randomOrDefaultPresent = hasRandom || hasDefault;
                 ParseFilterOptions(o, options);
             })
             .WithNotParsed(HandleParsingErrors);
 
-            if (randomOrDefaultPresent && hasOtherOptions)
+            if (hasRandom && hasOtherOptions)
             {
                 ConsoleLogger.IncompatibleOptions();
                 Environment.Exit(1);
             }
 
             options.Random = hasRandom;
-            options.Default = hasDefault;
 
             return options;
         }
