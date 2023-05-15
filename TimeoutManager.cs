@@ -46,10 +46,13 @@ namespace Bezdzione
             switch (category)
             {
                 case "Shared resources":
+                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "Dedicated resources":
                     return DEFAULT_VIRTUAL_TIMEOUT;
                 case "lightweight":
+                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "middleweight":
+                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "heavyweight":
                    return DEFAULT_BAREMETAL_TIMEOUT;
                 default:

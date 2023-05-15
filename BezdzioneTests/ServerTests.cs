@@ -2,6 +2,7 @@
 using Bezdzione.Request;
 using RestSharp;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BezdzioneTests
 {
@@ -9,6 +10,8 @@ namespace BezdzioneTests
     public class ServerTests
     {
         private Server server = new Server();
+
+        public Parameters GetServerParameters() => server.Parameters;
 
         [SetUp]
         public void SetUp(Server serverConfigurationToTest)

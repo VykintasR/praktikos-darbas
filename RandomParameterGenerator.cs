@@ -18,6 +18,8 @@ namespace Bezdzione
             
             PlanList allPlans = PlanList.GetAllPlans();
 
+            
+
             Region? randomRegion = RandomRegion();
             if (randomRegion != null)
             {

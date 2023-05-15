@@ -11,7 +11,7 @@ namespace Bezdzione.CLI
             int i = 0;
             while (i < testCount)
             {
-                ConsoleLogger.TestStart("random", RandomParameterGenerator.GetRandomParameters(timeout));
+                ConsoleLogger.TestStart("random", serverTests.GetServerParameters());
                 await ExecuteServerDeploymentTest(serverTests);
                 ConsoleLogger.TestCompleted();
                 i++;
