@@ -13,7 +13,7 @@ namespace Bezdzione
             AvailableRegions = RegionList.GetAllRegions();
         }
 
-        public RequestParameters GetRandomParameters()
+        public RequestParameters GetRandomParameters(int timeout)
         {
             
             PlanList allPlans = PlanList.GetAllPlans();
@@ -27,7 +27,7 @@ namespace Bezdzione
                     Image? randomImage = RandomImage(randomPlan);
                     if (randomImage != null)
                     {
-                        return new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug);
+                        return new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, timeout);
                     }   
                 }
             }

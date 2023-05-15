@@ -58,7 +58,7 @@ namespace Bezdzione.Data
                : new PlanList();
         }
 
-        public PlanList GetPlansBySlug(string slug)
+        public PlanList GetPlanBySlug(string slug)
         {
             return Plans != null
                ? new PlanList(Plans.Where(plan => plan.Slug.Equals(slug)).ToList())
@@ -77,6 +77,23 @@ namespace Bezdzione.Data
             return Plans != null
                ? new PlanList(Plans.Where(plan => plan.Images != null && plan.Images.Any(image => image.Slug == imageSlug)).ToList())
                : new PlanList();
+        }
+
+        public static PlanList FilterPlansByOptions(PlanList plans, string option, string value)
+        {
+            switch (option)
+            {
+                case "region":
+                    return plans.GetPlansFromRegion(value);
+                case "category":
+                    return plans.GetPlansWithCategory(value);
+                case "image":
+                    return plans.GetPlansWithImage(value);
+                case "plan":
+                    return plans.GetPlanBySlug(value);
+                default:
+                    return plans;
+            }
         }
 
     }

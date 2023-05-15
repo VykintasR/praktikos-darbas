@@ -3,7 +3,7 @@ using Bezdzione.Logs;
 using Bezdzione.Request;
 using RestSharp;
 using System.Diagnostics;
-using System.Reflection;
+using System.Threading;
 
 namespace BezdzioneTests
 {
@@ -11,7 +11,8 @@ namespace BezdzioneTests
     public  class ServerTests
     {
         [Test]
-        public async Task TestDefaultServerDeployment()
+        [TestCase(3)]
+        public async Task TestDefaultServerDeployment(int timeout)
         {
             // Deploy server
             Server server = new Server();
@@ -38,10 +39,10 @@ namespace BezdzioneTests
 
             while (serverState != "active")
             {
-                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(11))
+                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(timeout))
                 {
                     // if the maximum wait format is exceeded, log an error and fail the test
-                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
+                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than {timeout} mins to become active."));
                     server.UpdateInfo();
                     server.Delete();
                     Assert.Fail("Timeout - server took more than 11mins to become active.");
@@ -56,17 +57,17 @@ namespace BezdzioneTests
 
             //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
-            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(11)), $"Server took {stopwatch.Elapsed} to become active");
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(timeout)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();
             FileLogger.Log(response.IsSuccessStatusCode ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the server"));
         }
 
-        public async Task TestRandomServerDeployment()
+        public async Task TestRandomServerDeployment(int timeout)
         {   
             // Deploy server
-            Server server = new Server(new RandomParameterGenerator().GetRandomParameters());
+            Server server = new Server(new RandomParameterGenerator().GetRandomParameters(timeout));
             int serverId = server.Deploy();
 
             string parameterInfo = $"region: {server.Parameters.RegionSlug}, plan: {server.Parameters.PlanSlug}, OS image: {server.Parameters.ImageSlug}";
@@ -90,10 +91,10 @@ namespace BezdzioneTests
 
             while (serverState != "active")
             {
-                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(11))
+                if ((DateTime.Now - startTime) > TimeSpan.FromMinutes(timeout))
                 {
                     // if the maximum wait format is exceeded, log an error and fail the test
-                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than 10mins to become active."));
+                    FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than {timeout} mins to become active."));
                     server.UpdateInfo();
                     server.Delete();
                     Assert.Fail("Timeout - server took more than 11mins to become active.");
@@ -108,7 +109,7 @@ namespace BezdzioneTests
 
             //Assert that server became active within 10 minutes
             FileLogger.Log(MessageFormatter.Info($"Server took {stopwatch.Elapsed} to become active"));
-            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(11)), $"Server took {stopwatch.Elapsed} to become active");
+            Assert.That(stopwatch.Elapsed, Is.LessThan(TimeSpan.FromMinutes(timeout)), $"Server took {stopwatch.Elapsed} to become active");
 
             await Task.Delay(15000);
             RestResponse response = server.Delete();

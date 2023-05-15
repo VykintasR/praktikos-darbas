@@ -11,17 +11,20 @@ namespace Bezdzione.Request
         public string? ImageSlug { get; private set; }
         [JsonProperty("region")]
         public string? RegionSlug { get; private set; }
+        [JsonIgnore]
+        public int Timeout { get; private set; }
 
         public RequestParameters()
         {
-
+            SetTimeout(int.Parse(Configuration.GetSetting("DEFAULT_TIMEOUT")));
         }
 
-        public RequestParameters(string? regionSlug, string? planSlug, string imageSlug)
+        public RequestParameters(string? regionSlug, string? planSlug, string imageSlug, int timeout)
         {
             SetRegion(regionSlug);
             SetPlan(planSlug);
             SetImage(imageSlug);
+            SetTimeout(timeout);
         }
 
         public void SetDefaultParameters()
@@ -60,6 +63,11 @@ namespace Bezdzione.Request
         public void SetImage(string? imageSlug)
         {
             ImageSlug = imageSlug;
+        }
+
+        public void SetTimeout(int timeout)
+        {  
+            Timeout = timeout; 
         }
     }
 }

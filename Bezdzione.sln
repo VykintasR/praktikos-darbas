@@ -5,7 +5,12 @@ VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bezdzione", "Bezdzione.csproj", "{7C1F7BED-4868-433F-B98A-7B2E9FE97287}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BezdzioneTests", "BezdzioneTests\BezdzioneTests.csproj", "{CE8E3BD7-3829-4717-BC54-2A231986892F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BezdzioneTests", "BezdzioneTests\BezdzioneTests.csproj", "{CE8E3BD7-3829-4717-BC54-2A231986892F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6EAD876B-F781-4B1A-B07B-299CF6EA0FD0}"
+	ProjectSection(SolutionItems) = preProject
+		ExceptionHandler.cs = ExceptionHandler.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
