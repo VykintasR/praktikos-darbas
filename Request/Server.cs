@@ -21,6 +21,13 @@ namespace Bezdzione.Request
             Parameters.SetDefaultParameters();
         }
 
+        public Server(int timeout)
+        {
+            Parameters = new Parameters();
+            Parameters.SetDefaultParameters();
+            Parameters.SetTimeout(timeout);
+        }
+
         public Server(Parameters parameters)
         {
             Parameters = parameters;

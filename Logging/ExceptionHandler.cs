@@ -9,6 +9,9 @@ public static class ExceptionHandler
             case AssertionException assertionEx:
                 ConsoleLogger.TestFail(assertionEx.Message);
                 break;
+            case ArgumentException argumentEx:
+                ConsoleLogger.Exception(argumentEx.Message);
+                break;
             default:
                 ConsoleLogger.UnexpectedError(ex.Message);
                 break;

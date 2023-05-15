@@ -8,7 +8,7 @@ namespace BezdzioneTests
     [TestFixture]
     public class ServerTests
     {
-        private Server server;
+        private Server server = new Server();
 
         [SetUp]
         public void SetUp(Server serverConfigurationToTest)
@@ -17,11 +17,11 @@ namespace BezdzioneTests
         }
 
         [Test]
-        [TestCase(15)]
-        public async Task TestServerDeployment(int timeout)
+        public async Task TestServerDeployment()
         {
             // Deploy given server
             int serverId = server.Deploy();
+            int timeout = server.Parameters.Timeout;
 
             string parameterInfo = $"region: {server.Parameters.RegionSlug}, plan: {server.Parameters.PlanSlug}, OS image: {server.Parameters.ImageSlug}";
 

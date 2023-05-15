@@ -1,5 +1,4 @@
-﻿
-using Bezdzione.Request;
+﻿using Bezdzione.Request;
 using Bezdzione.Logs;
 using BezdzioneTests;
 
@@ -12,31 +11,25 @@ namespace Bezdzione.CLI
             int i = 0;
             while (i < testCount)
             {
-                try
-                {
-                    int timeout = int.Parse(Configuration.GetSetting("DEFAULT_BAREMETAL_TIMEOUT"));
-                    ConsoleLogger.TestStart("random", RandomParameterGenerator.GetRandomParameters(timeout));
-                    serverTests.SetUp(new Server(RandomParameterGenerator.GetRandomParameters(timeout)));
-                    await Task.Run(() => serverTests.TestServerDeployment(timeout));
-                    ConsoleLogger.TestSuccess();
-                }
-                catch (Exception ex)
-                {
-                    ExceptionHandler.Handle(ex);
-                }
+                ConsoleLogger.TestStart("random", new Parameters());
+                await ExecuteServerDeploymentTest(serverTests);
+                ConsoleLogger.TestSuccess();
                 i++;
             }
         }
 
         public static async Task RunDefaultTest(ServerTests serverTests)
         {
+            ConsoleLogger.TestStart("default", new Parameters());
+            await ExecuteServerDeploymentTest(serverTests);
+            ConsoleLogger.TestSuccess();
+        }
+
+        private static async Task ExecuteServerDeploymentTest(ServerTests serverTests)
+        {
             try
             {
-                int timeout = int.Parse(Configuration.GetSetting("DEFAULT_VIRTUAL_TIMEOUT"));
-                ConsoleLogger.TestStart("default", new Parameters());
-                serverTests.SetUp(new Server());
-                await Task.Run(() => serverTests.TestServerDeployment(timeout));
-                ConsoleLogger.TestSuccess();
+                await Task.Run(serverTests.TestServerDeployment);
             }
             catch (Exception ex)
             {

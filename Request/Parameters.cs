@@ -29,6 +29,7 @@ namespace Bezdzione.Request
 
         public void SetDefaultParameters()
         {
+            Timeout = TimeoutManager.GetDefaultTimeout();
             RegionList AvailableRegions = RegionList.GetAllRegions();
             if (AvailableRegions.Regions != null)
             {

@@ -23,7 +23,7 @@ namespace Bezdzione.CLI
         [Option("default", HelpText = "Perform a default server deployment test.")]
         public bool Default { get; set; }
 
-        [Option("timeout", HelpText = "Timeout in minutes for running tests")]
+        [Option("timeout", HelpText = "Timeout in minutes for running tests.")]
         public int Timeout { get; set; } = 0;
 
         public List<(string, string)> InputOrder { get; set; } = new List<(string, string)>();

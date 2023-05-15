@@ -13,7 +13,7 @@ namespace Bezdzione
             AvailableRegions = RegionList.GetAllRegions();
         }
 
-        public static Parameters GetRandomParameters(int timeout)
+        public static Parameters GetRandomParameters(int userTimeout)
         {
             
             PlanList allPlans = PlanList.GetAllPlans();
@@ -24,6 +24,7 @@ namespace Bezdzione
                 Plan? randomPlan = RandomPlan(allPlans.GetPlansFromRegion(randomRegion.Slug));
                 if (randomPlan != null)
                 {
+                    int timeout = randomPlan.Category != null ? TimeoutManager.GetTimeoutForCategory(userTimeout, randomPlan.Category) : TimeoutManager.GetDefaultTimeout();
                     Image? randomImage = RandomImage(randomPlan);
                     if (randomImage != null)
                     {

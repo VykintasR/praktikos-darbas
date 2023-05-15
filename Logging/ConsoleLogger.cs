@@ -1,11 +1,11 @@
 ﻿using Bezdzione.Request;
-using System.Net.NetworkInformation;
 
 namespace Bezdzione.Logs
 {
     public static class ConsoleLogger
     {
         public static void Log(string message) => Console.WriteLine($"{message}");
+        public static void Exception(string message) => Console.WriteLine($"An exception was thrown: {message}");
         public static void RequestInfo(Server server) => Console.WriteLine(MessageFormatter.Info(MessageFormatter.RequestInfo(server.Parameters)));
         public static void TestStart(string type, Parameters parameters) => Console.WriteLine($"Running {type} server deployment test with timeout of {parameters.Timeout} minutes...");
         public static void TestSuccess() => Console.WriteLine($"Test completed successfully.");
