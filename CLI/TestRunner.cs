@@ -6,23 +6,23 @@ namespace Bezdzione.CLI
 {
     public static class TestRunner
     {
-        public static async Task RunRandomTest(ServerTests serverTests, int testCount)
+        public static async Task RunRandomTest(ServerTests serverTests, int testCount, int? timeout)
         {
             int i = 0;
             while (i < testCount)
             {
-                ConsoleLogger.TestStart("random", new Parameters());
+                ConsoleLogger.TestStart("random", RandomParameterGenerator.GetRandomParameters(timeout));
                 await ExecuteServerDeploymentTest(serverTests);
-                ConsoleLogger.TestSuccess();
+                ConsoleLogger.TestCompleted();
                 i++;
             }
         }
 
-        public static async Task RunDefaultTest(ServerTests serverTests)
+        public static async Task RunDefaultTest(ServerTests serverTests, int? timeout)
         {
-            ConsoleLogger.TestStart("default", new Parameters());
+            ConsoleLogger.TestStart("default", new Parameters(timeout));
             await ExecuteServerDeploymentTest(serverTests);
-            ConsoleLogger.TestSuccess();
+            ConsoleLogger.TestCompleted();
         }
 
         private static async Task ExecuteServerDeploymentTest(ServerTests serverTests)

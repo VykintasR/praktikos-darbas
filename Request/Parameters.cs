@@ -12,11 +12,13 @@ namespace Bezdzione.Request
         [JsonProperty("region")]
         public string? RegionSlug { get; private set; }
         [JsonIgnore]
+        public string? Category { get; private set; }
+        [JsonIgnore]
         public int Timeout { get; private set; }
 
-        public Parameters()
+        public Parameters(int? userTimeout)
         {
-            SetTimeout(int.Parse(Configuration.GetSetting("DEFAULT_TIMEOUT")));
+            SetDefaultParameters(userTimeout);
         }
 
         public Parameters(string? regionSlug, string? planSlug, string imageSlug, int timeout)
@@ -27,7 +29,7 @@ namespace Bezdzione.Request
             SetTimeout(timeout);
         }
 
-        public void SetDefaultParameters()
+        public void SetDefaultParameters(int? userTimeout)
         {
             Timeout = TimeoutManager.GetDefaultTimeout();
             RegionList AvailableRegions = RegionList.GetAllRegions();
@@ -44,6 +46,8 @@ namespace Bezdzione.Request
                 {
                     Plan firstPlan = regionPlans.Plans.ElementAt(0);
                     SetPlan(firstPlan.Slug);
+                    SetCategory(firstPlan.Category);
+                    SetTimeout(userTimeout);
 
                     if (firstPlan.Images != null && firstPlan.Images.ElementAt(1) != null)
                     {
@@ -66,9 +70,16 @@ namespace Bezdzione.Request
             ImageSlug = imageSlug;
         }
 
-        public void SetTimeout(int timeout)
-        {  
-            Timeout = timeout; 
+        public void SetTimeout(int? userTimeout)
+        {
+            Timeout = Category == null
+                ? userTimeout == null ? TimeoutManager.GetDefaultTimeout() : userTimeout.Value
+                : userTimeout == null ? TimeoutManager.GetTimeout(userTimeout, Category) : userTimeout.Value;
+        }
+
+        private void SetCategory(string? category)
+        {
+           Category = category;
         }
     }
 }

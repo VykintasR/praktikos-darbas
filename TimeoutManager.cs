@@ -25,32 +25,36 @@ namespace Bezdzione
         }
 
         public static int GetDefaultTimeout() => DEFAULT_TIMEOUT;
-        public static int GetTimeoutForCategory(int? userTimeout, string category)
+        public static int GetTimeout(int? userTimeout, string category)
         {
-
-            if (userTimeout <= 0)
+            switch (userTimeout)
             {
-                throw new ArgumentException("Invalid timeout. Timeout must be a positive  integer value.");
+                case <= 0:
+                    ConsoleLogger.InvalidTimeout();
+                    return DEFAULT_TIMEOUT;
+                case > 0:
+                    return userTimeout.Value;
+                default:
+                    {
+                        return SetTimeoutByCategory(category);
+                    }
             }
+        }
 
-            int timeout;
-
+        private static int SetTimeoutByCategory(string category)
+        {
             switch (category)
             {
                 case "Shared resources":
                 case "Dedicated resources":
-                    timeout = userTimeout ?? DEFAULT_VIRTUAL_TIMEOUT;
-                    break;
+                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "lightweight":
                 case "middleweight":
                 case "heavyweight":
-                    timeout = userTimeout ?? DEFAULT_BAREMETAL_TIMEOUT;
-                    break;
+                   return DEFAULT_BAREMETAL_TIMEOUT;
                 default:
                     throw new ArgumentException("Invalid category.");
             }
-
-            return timeout;
         }
     }
 }

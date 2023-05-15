@@ -3,7 +3,6 @@ using Bezdzione.CLI;
 using BezdzioneTests;
 using Bezdzione.Logs;
 using Bezdzione.Request;
-using System.Threading;
 
 namespace Bezdzione
 {
@@ -17,7 +16,7 @@ namespace Bezdzione
             if (options.Random)
             {
                 serverTests.SetUp(new Server(RandomParameterGenerator.GetRandomParameters(options.Timeout)));
-                await TestRunner.RunRandomTest(serverTests, 5);
+                await TestRunner.RunRandomTest(serverTests, 10, options.Timeout);
             }
             else if (options.InputOrder.Count > 0)
             {
@@ -41,8 +40,8 @@ namespace Bezdzione
             }
             else
             {
-                serverTests.SetUp(new Server(options.Timeout));
-                await TestRunner.RunDefaultTest(serverTests);
+                serverTests.SetUp(new Server(new Parameters(options.Timeout)));
+                await TestRunner.RunDefaultTest(serverTests, options.Timeout);
             }
             ConsoleLogger.TestingComplete();
             Console.ReadLine();

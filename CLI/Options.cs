@@ -24,7 +24,7 @@ namespace Bezdzione.CLI
         public bool Default { get; set; }
 
         [Option("timeout", HelpText = "Timeout in minutes for running tests.")]
-        public int Timeout { get; set; } = 0;
+        public int? Timeout { get; set; } = null;
 
         public List<(string, string)> InputOrder { get; set; } = new List<(string, string)>();
 

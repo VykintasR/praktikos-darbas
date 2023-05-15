@@ -13,7 +13,7 @@ namespace Bezdzione
             AvailableRegions = RegionList.GetAllRegions();
         }
 
-        public static Parameters GetRandomParameters(int userTimeout)
+        public static Parameters GetRandomParameters(int? userTimeout)
         {
             
             PlanList allPlans = PlanList.GetAllPlans();
@@ -24,7 +24,7 @@ namespace Bezdzione
                 Plan? randomPlan = RandomPlan(allPlans.GetPlansFromRegion(randomRegion.Slug));
                 if (randomPlan != null)
                 {
-                    int timeout = randomPlan.Category != null ? TimeoutManager.GetTimeoutForCategory(userTimeout, randomPlan.Category) : TimeoutManager.GetDefaultTimeout();
+                    int timeout = randomPlan.Category != null ? TimeoutManager.GetTimeout(userTimeout, randomPlan.Category) : TimeoutManager.GetDefaultTimeout();
                     Image? randomImage = RandomImage(randomPlan);
                     if (randomImage != null)
                     {
@@ -33,8 +33,8 @@ namespace Bezdzione
                 }
             }
             
-            Parameters defaultParameters = new Parameters();
-            defaultParameters.SetDefaultParameters();
+            Parameters defaultParameters = new Parameters(userTimeout);
+            defaultParameters.SetDefaultParameters(userTimeout);
             return defaultParameters;
         }
 
