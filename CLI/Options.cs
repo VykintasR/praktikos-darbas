@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Bezdzione.Logs;
 
 namespace Bezdzione.CLI
 {
@@ -49,7 +50,7 @@ namespace Bezdzione.CLI
 
             if (randomOrDefaultPresent && hasOtherOptions)
             {
-                Console.WriteLine("Error: Either only one of --random or --default can be specified, or the four other options.");
+                ConsoleLogger.IncompatibleOptions();
                 Environment.Exit(1);
             }
 
@@ -103,13 +104,13 @@ namespace Bezdzione.CLI
             switch (error)
             {
                 case BadFormatConversionError _:
-                    Console.WriteLine("Error: Invalid value for timeout. Please provide a valid integer value.");
+                    ConsoleLogger.InvalidTimeout();
                     break;
                 case UnknownOptionError _:
-                    Console.WriteLine("Error: Unknown option. Valid options are: default, random, category, plan, image, region, and timeout.");
+                    ConsoleLogger.UnknownOption();
                     break;
                 default:
-                    Console.WriteLine(error.ToString());
+                    ConsoleLogger.UnexpectedError(error.ToString() ?? "error without message while parsing CLI options.");
                     break;
             }
         }

@@ -1,6 +1,7 @@
 ﻿using Bezdzione.Data;
 using Bezdzione.CLI;
 using BezdzioneTests;
+using Bezdzione.Logs;
 
 namespace Bezdzione
 {
@@ -17,7 +18,7 @@ namespace Bezdzione
             }
             else if (options.Random)
             {
-                await TestRunner.RunRandomTest(serverTests, 15);
+                await TestRunner.RunRandomTest(serverTests, 2);
             }
             else if (options.InputOrder.Count > 0)
             {
@@ -43,8 +44,7 @@ namespace Bezdzione
             {
                 await TestRunner.RunDefaultTest(serverTests);
             }
-            Console.WriteLine("Testing done.");
-            Console.WriteLine("Press Enter key to exit....");
+            ConsoleLogger.TestingComplete();
             Console.ReadLine();
             Environment.Exit(0);
         }   

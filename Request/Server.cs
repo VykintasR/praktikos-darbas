@@ -11,17 +11,17 @@ namespace Bezdzione.Request
         public string? Region { get; private set; }
         public string? Plan { get; private set; }
         public string? Image { get; private set; }
-        public RequestParameters Parameters { get; private set; }
+        public Parameters Parameters { get; private set; }
 
         public string? State { get; private set; }
 
         public Server()
         {
-            Parameters = new RequestParameters();
+            Parameters = new Parameters();
             Parameters.SetDefaultParameters();
         }
 
-        public Server(RequestParameters parameters)
+        public Server(Parameters parameters)
         {
             Parameters = parameters;
         }

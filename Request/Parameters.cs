@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Bezdzione.Request
 {
-    public class RequestParameters
+    public class Parameters
     {
         [JsonProperty("plan")]
         public string? PlanSlug { get; private set; }
@@ -14,12 +14,12 @@ namespace Bezdzione.Request
         [JsonIgnore]
         public int Timeout { get; private set; }
 
-        public RequestParameters()
+        public Parameters()
         {
             SetTimeout(int.Parse(Configuration.GetSetting("DEFAULT_TIMEOUT")));
         }
 
-        public RequestParameters(string? regionSlug, string? planSlug, string imageSlug, int timeout)
+        public Parameters(string? regionSlug, string? planSlug, string imageSlug, int timeout)
         {
             SetRegion(regionSlug);
             SetPlan(planSlug);

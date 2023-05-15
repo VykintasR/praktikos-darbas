@@ -1,5 +1,6 @@
 ﻿
-
+using Bezdzione.Request;
+using Bezdzione.Logs;
 using BezdzioneTests;
 
 namespace Bezdzione.CLI
@@ -14,9 +15,10 @@ namespace Bezdzione.CLI
                 try
                 {
                     int timeout = int.Parse(Configuration.GetSetting("DEFAULT_BAREMETAL_TIMEOUT"));
-                    Console.WriteLine($"Running random server deployment test with timeout of {timeout} minutes...");
-                    await Task.Run(() => serverTests.TestRandomServerDeployment(timeout));
-                    Console.WriteLine("Test completed successfully.");
+                    ConsoleLogger.TestStart("random", RandomParameterGenerator.GetRandomParameters(timeout));
+                    serverTests.SetUp(new Server(RandomParameterGenerator.GetRandomParameters(timeout)));
+                    await Task.Run(() => serverTests.TestServerDeployment(timeout));
+                    ConsoleLogger.TestSuccess();
                 }
                 catch (Exception ex)
                 {
@@ -31,9 +33,10 @@ namespace Bezdzione.CLI
             try
             {
                 int timeout = int.Parse(Configuration.GetSetting("DEFAULT_VIRTUAL_TIMEOUT"));
-                Console.WriteLine($"Running default server deployment test with timeout of {timeout} minutes...");
-                await Task.Run(() => serverTests.TestDefaultServerDeployment(timeout));
-                Console.WriteLine("Test completed successfully.");
+                ConsoleLogger.TestStart("default", new Parameters());
+                serverTests.SetUp(new Server());
+                await Task.Run(() => serverTests.TestServerDeployment(timeout));
+                ConsoleLogger.TestSuccess();
             }
             catch (Exception ex)
             {

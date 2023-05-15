@@ -1,14 +1,17 @@
-﻿public static class ExceptionHandler
+﻿using Bezdzione.Logs;
+
+public static class ExceptionHandler
 {
     public static void Handle(Exception ex)
     {
-        if (ex is AssertionException assertionEx)
+        switch (ex)
         {
-            Console.WriteLine("Test failed: " + assertionEx.Message);
-        }
-        else
-        {
-            Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            case AssertionException assertionEx:
+                ConsoleLogger.TestFail(assertionEx.Message);
+                break;
+            default:
+                ConsoleLogger.UnexpectedError(ex.Message);
+                break;
         }
     }
 }
