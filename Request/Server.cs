@@ -1,6 +1,7 @@
 ﻿using RestSharp;
 using Bezdzione.Logs;
 using Newtonsoft.Json;
+using Bezdzione.Data;
 
 namespace Bezdzione.Request
 {
@@ -11,16 +12,15 @@ namespace Bezdzione.Request
         public string? Region { get; private set; }
         public string? Plan { get; private set; }
         public string? Image { get; private set; }
-        public Parameters Parameters { get; private set; }
-
+        public RequestParameters Parameters { get; private set; }
         public string? State { get; private set; }
 
-        public Server()
+        public Server(PlanList allPlans)
         {
-            Parameters = new Parameters(null);
-            Parameters.SetDefaultParameters(null);
+            Parameters = new RequestParameters(null, allPlans);
+            Parameters.SetDefaultParameters(null, allPlans);
         }
-        public Server(Parameters parameters)
+        public Server(RequestParameters parameters)
         {
             Parameters = parameters;
         }
@@ -29,7 +29,7 @@ namespace Bezdzione.Request
         {
             string parameterInfo = $"region: {Parameters.RegionSlug}, plan: {Parameters.PlanSlug}, OS image: {Parameters.ImageSlug}";
             Id = HTTPClient.DeployServer(Parameters);
-            FileLogger.Log(Id == 0 ? MessageFormatter.Error($"Failed to deploy server with {parameterInfo}.") : MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
+            FileLogger.Log(Id == 0 ? MessageFormatter.Error($"Failed to deploy Server with {parameterInfo}.") : MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
             return Id;
         }
 
@@ -53,13 +53,13 @@ namespace Bezdzione.Request
             }
             else
             {
-                FileLogger.Log(MessageFormatter.Error("Failed to retrieve server info."));
+                FileLogger.Log(MessageFormatter.Error("Failed to retrieve Server info."));
             }
         }
 
         public RestResponse Delete()
         {
-            FileLogger.Log(MessageFormatter.Info($"Sending request to delete server {Name}."));
+            FileLogger.Log(MessageFormatter.Info($"Sending request to delete Server {Name}."));
             return HTTPClient.DeleteServer(Id);
         }
     }

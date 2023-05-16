@@ -13,11 +13,8 @@ namespace Bezdzione
             AvailableRegions = RegionList.GetAllRegions();
         }
 
-        public static Parameters GetRandomParameters(int? userTimeout)
+        public static RequestParameters GetRandomParameters(int? userTimeout, PlanList allPlans)
         {
-            
-            PlanList allPlans = PlanList.GetAllPlans();
-            Console.WriteLine(allPlans.Plans.Count);
             Region? randomRegion = RandomRegion();
             if (randomRegion != null)
             {
@@ -28,13 +25,13 @@ namespace Bezdzione
                     Image? randomImage = RandomImage(randomPlan);
                     if (randomImage != null)
                     {
-                        return new Parameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, timeout);
+                        return new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, timeout);
                     }   
                 }
             }
             
-            Parameters defaultParameters = new Parameters(userTimeout);
-            defaultParameters.SetDefaultParameters(userTimeout);
+            RequestParameters defaultParameters = new RequestParameters(userTimeout, allPlans);
+            defaultParameters.SetDefaultParameters(userTimeout, allPlans);
             return defaultParameters;
         }
 
@@ -47,8 +44,17 @@ namespace Bezdzione
             }
             return null;
         }
+        public static Region? RandomRegionFromPlan(Plan plan)
+        {
+            if (plan.Regions != null)
+            {
+                int randomIndex = random.Next(plan.Regions.Count);
+                return plan.Regions.ElementAt(randomIndex);
+            }
+            return null;
+        }
 
-        private static Plan? RandomPlan(PlanList regionPlans)
+        public static Plan? RandomPlan(PlanList regionPlans)
         {
             if (regionPlans.Plans != null)
             {
@@ -58,7 +64,7 @@ namespace Bezdzione
             return null;
         }
 
-        private static Image? RandomImage(Plan? plan)
+        public static Image? RandomImage(Plan? plan)
         {
             if (plan != null && plan.Images != null)
             {

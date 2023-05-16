@@ -1,32 +1,36 @@
 ﻿using Bezdzione.Logs;
 using Bezdzione.Request;
+using Bezdzione.Data;
 using RestSharp;
 using System.Diagnostics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace BezdzioneTests
 {
     [TestFixture]
     public class ServerTests
     {
-        private Server server = new Server();
+        public Server Server { get; private set; }
+        public Bezdzione.Request.RequestParameters GetServerParameters() => Server.Parameters;
 
-        public Parameters GetServerParameters() => server.Parameters;
+        public ServerTests(PlanList allPlans) 
+        {
+            Server = new Server(allPlans);
+        }
 
         [SetUp]
-        public void SetUp(Server serverConfigurationToTest)
+        public void SetUp(Server server)
         {
-            server = serverConfigurationToTest;
+            Server = server;
         }
 
         [Test]
         public async Task TestServerDeployment()
         {
-            // Deploy given server
-            int serverId = server.Deploy();
-            int timeout = server.Parameters.Timeout;
+            // Deploy given Server
+            int serverId = Server.Deploy();
+            int timeout = Server.Parameters.Timeout;
 
-            string parameterInfo = $"region: {server.Parameters.RegionSlug}, plan: {server.Parameters.PlanSlug}, OS image: {server.Parameters.ImageSlug}";
+            string parameterInfo = $"region: {Server.Parameters.RegionSlug}, plan: {Server.Parameters.PlanSlug}, OS image: {Server.Parameters.ImageSlug}";
 
             HandleServerDeployment(serverId, parameterInfo);
             Stopwatch stopwatch = new Stopwatch();
@@ -35,12 +39,12 @@ namespace BezdzioneTests
             await WaitForServerActiveState(timeout);
 
             stopwatch.Stop();
-            server.UpdateInfo();
+            Server.UpdateInfo();
 
             AssertServerActive(stopwatch.Elapsed, timeout);
 
             await Task.Delay(15000);
-            RestResponse response = server.Delete();
+            RestResponse response = Server.Delete();
             LogServerDeletionStatus(response.IsSuccessStatusCode);
         }
 
@@ -49,16 +53,16 @@ namespace BezdzioneTests
             switch (serverId)
             {
                 case > 0:
-                    ConsoleLogger.RequestInfo(server);
+                    ConsoleLogger.RequestInfo(Server);
                     break;
                 default:
-                    Assert.Fail(MessageFormatter.Error($"Failed to deploy server with {parameterInfo}."));
+                    Assert.Fail($"Failed to deploy Server with {parameterInfo}.");
                     break;
             }
         }
         private async Task WaitForServerActiveState(int timeout)
         {
-            string serverState = server.GetState();
+            string serverState = Server.GetState();
             DateTime startTime = DateTime.Now;
 
             while (serverState != "active")
@@ -69,16 +73,16 @@ namespace BezdzioneTests
                 }
 
                 await Task.Delay(5000);
-                serverState = server.GetState();
+                serverState = Server.GetState();
             }
         }
 
         private void HandleServerTimeout(int timeout)
         {
-            FileLogger.Log(MessageFormatter.Info($"Timeout - server took more than {timeout} mins to become active."));
-            server.UpdateInfo();
-            server.Delete();
-            Assert.Fail($"Timeout - server took more than {timeout} mins to become active.");
+            FileLogger.Log(MessageFormatter.Info($"Timeout - Server took more than {timeout} mins to become active."));
+            Server.UpdateInfo();
+            Server.Delete();
+            Assert.Fail($"Timeout - Server took more than {timeout} mins to become active.");
         }
 
         private void AssertServerActive(TimeSpan elapsed, int timeout)
@@ -90,8 +94,8 @@ namespace BezdzioneTests
 
         private void LogServerDeletionStatus(bool isSuccess)
         {
-            ConsoleLogger.Log(isSuccess ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the server"));
-            FileLogger.Log(isSuccess ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the server"));
+            ConsoleLogger.Log(isSuccess ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the Server"));
+            FileLogger.Log(isSuccess ? MessageFormatter.Info("Server successfully deleted.") : MessageFormatter.Error("Failed to delete the Server"));
         }
     }
 }

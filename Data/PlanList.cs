@@ -30,11 +30,6 @@ namespace Bezdzione.Data
                 Plans = new List<Plan>();
             }
         }
-        public static IEnumerable<int> GetAllPlanIds()
-        {
-            PlanList AllPlans = PlanList.GetAllPlans();
-            return AllPlans.Plans != null ? AllPlans.Plans.Select(plan => plan.Id) : Enumerable.Empty<int>();
-        }
 
         public static PlanList GetAllPlans()
         {
@@ -79,7 +74,7 @@ namespace Bezdzione.Data
                : new PlanList();
         }
 
-        public static PlanList FilterPlansByOptions(PlanList plans, string option, string value)
+        public PlanList FilterPlansByOption(PlanList plans, string option, string value)
         {
             switch (option)
             {

@@ -7,7 +7,7 @@ namespace Bezdzione.Request
     public static class HTTPClient
     {
         private static RestClient client = new RestClient(API_URLS.BASE_API_URL);
-        private static RestResponse SendHTTPRequest(string endpointURL, Method method, Parameters? parameters = null)
+        private static RestResponse SendHTTPRequest(string endpointURL, Method method, RequestParameters? parameters = null)
         {
             RestRequest request = new(endpointURL, method);
             request.AddHeader("Authorization", "Bearer " + Configuration.GetSetting("API_KEY"));
@@ -36,13 +36,9 @@ namespace Bezdzione.Request
             return SendHTTPRequest(string.Format(API_URLS.GetPlanImages, Slug), Method.Get);
         }
 
-        public static int DeployServer(Parameters parameters)
+        public static int DeployServer(RequestParameters parameters)
         {
             RestResponse response = SendHTTPRequest(API_URLS.RequestServer, Method.Post, parameters);
-            if (!response.IsSuccessful && response.Content != null)
-            {
-                Console.WriteLine(response.Content);
-            }
 
             var responseJson = response.Content;
             if (responseJson != null)

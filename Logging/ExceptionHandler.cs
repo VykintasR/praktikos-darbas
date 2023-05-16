@@ -13,7 +13,7 @@ public static class ExceptionHandler
                 ConsoleLogger.Exception(argumentEx.Message);
                 break;
             default:
-                ConsoleLogger.UnexpectedError(ex.Message);
+                ConsoleLogger.Error(ex.Message);
                 break;
         }
     }

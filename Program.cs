@@ -2,7 +2,6 @@
 using Bezdzione.CLI;
 using BezdzioneTests;
 using Bezdzione.Logs;
-using Bezdzione.Request;
 
 namespace Bezdzione
 {
@@ -10,40 +9,49 @@ namespace Bezdzione
     {
         static async Task Main(string[] args)
         {
-            ServerTests serverTests = new ServerTests();
+
             Options options = Options.SetOptions(args);
+
+            //cached plans
+            PlanList allPlans = PlanList.GetAllPlans();
+            ServerTests serverTests = new ServerTests(allPlans);
 
             if (options.Random)
             {
-                await TestRunner.RunRandomTest(serverTests, 10, options.Timeout);
+                await TestRunner.SetUpRandomTest(serverTests, allPlans, options.Testcount, options.Timeout);
             }
-            else if (options.InputOrder.Count > 0)
+            else if (options.InputOptions.Count > 0)
             {
-                // all plans
-                PlanList plans = PlanList.GetAllPlans();
-                Console.WriteLine(plans.Plans.Count);
-
-                foreach ((string, string) filterParameter in options.InputOrder)
+                PlanList filteredPlans = FilterPlans(allPlans, options);
+                if (filteredPlans.Plans != null && filteredPlans.Plans.Count == 0)
                 {
-                    string option = filterParameter.Item1;
-                    string value = filterParameter.Item2;
-                    Console.WriteLine(option + " " + value);
-                    plans = PlanList.FilterPlansByOptions(plans, option, value);
+                    ExceptionHandler.Handle(new Exception($"No plans were found with these options."));
+                    ConsoleLogger.End();
+                    Console.ReadLine();
+                    Environment.Exit(1);
                 }
-
-                Console.WriteLine(plans.Plans.Count);
-                foreach(Plan plan in plans.Plans)
+                else
                 {
-                    plan.ShowInfo();
-                }
+                    await TestRunner.SetUpFilteredRandomTest(serverTests, FilterPlans(allPlans, options), options);
+                }   
             }
             else
             {
-                await TestRunner.RunDefaultTest(serverTests, options.Timeout);
+                await TestRunner.SetUpDefaultTest(serverTests, allPlans, options.Testcount, options.Timeout);
             }
-            ConsoleLogger.TestingComplete();
             Console.ReadLine();
             Environment.Exit(0);
-        }   
+        }
+        
+        private static PlanList FilterPlans(PlanList listToFilter, Options options)
+        {
+            foreach((string, string) filterParameter in options.InputOptions)
+                {
+                string option = filterParameter.Item1;
+                string value = filterParameter.Item2;
+                listToFilter =  listToFilter.FilterPlansByOption(listToFilter, option, value);
+            }
+            return listToFilter;
+        }
     }
 }

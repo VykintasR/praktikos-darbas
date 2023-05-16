@@ -3,7 +3,7 @@ namespace Bezdzione
 {
     public static class TimeoutManager
     {
-        private static readonly int DEFAULT_TIMEOUT;
+        public static readonly int DEFAULT_TIMEOUT = 10;
         private static readonly int DEFAULT_VIRTUAL_TIMEOUT;
         private static readonly int DEFAULT_BAREMETAL_TIMEOUT;
 
@@ -11,20 +11,19 @@ namespace Bezdzione
         {
             try
             {
-                DEFAULT_TIMEOUT = int.Parse(Configuration.GetSetting("DEFAULT_TIMEOUT"));
                 DEFAULT_VIRTUAL_TIMEOUT = int.Parse(Configuration.GetSetting("DEFAULT_VIRTUAL_TIMEOUT"));
                 DEFAULT_BAREMETAL_TIMEOUT = int.Parse(Configuration.GetSetting("DEFAULT_BAREMETAL_TIMEOUT"));
             }
             catch
             {
-                ConsoleLogger.InvalidTimeout();
-                DEFAULT_TIMEOUT = 10;
-                DEFAULT_VIRTUAL_TIMEOUT = 15;
-                DEFAULT_BAREMETAL_TIMEOUT = 3;
+                ConsoleLogger.DefaultTimeoutsNotSet();;
+                DEFAULT_VIRTUAL_TIMEOUT = DEFAULT_TIMEOUT;
+                DEFAULT_BAREMETAL_TIMEOUT = DEFAULT_TIMEOUT;
             }
         }
 
         public static int GetDefaultTimeout() => DEFAULT_TIMEOUT;
+
         public static int GetTimeout(int? userTimeout, string category)
         {
             switch (userTimeout)
@@ -35,9 +34,7 @@ namespace Bezdzione
                 case > 0:
                     return userTimeout.Value;
                 default:
-                    {
-                        return SetTimeoutByCategory(category);
-                    }
+                    return SetTimeoutByCategory(category);
             }
         }
 
@@ -46,13 +43,10 @@ namespace Bezdzione
             switch (category)
             {
                 case "Shared resources":
-                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "Dedicated resources":
                     return DEFAULT_VIRTUAL_TIMEOUT;
                 case "lightweight":
-                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "middleweight":
-                    return DEFAULT_VIRTUAL_TIMEOUT;
                 case "heavyweight":
                    return DEFAULT_BAREMETAL_TIMEOUT;
                 default:
