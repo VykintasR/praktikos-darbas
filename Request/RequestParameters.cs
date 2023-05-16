@@ -39,11 +39,11 @@ namespace Bezdzione.Request
         public static RequestParameters ParamatetersFromOptions(PlanList filteredPlans, Options options)
         {
             RequestParameters parameters = new RequestParameters();
+
             if (options.Plan != null)
             {
                 if (filteredPlans.Plans != null)
                 {
-
                     Plan plan = filteredPlans.Plans.ElementAt(0);
 
                     parameters.SetPlan(plan.Slug);
@@ -90,9 +90,45 @@ namespace Bezdzione.Request
                 }
                 return parameters;
             }
+            else if (options.Region != null)
+            {
+                
+                parameters.SetRegion(options.Region);
+
+                Plan? plan = RandomParameterGenerator.RandomPlan(filteredPlans);
+                if (plan != null)
+                {
+                    parameters.SetPlan(plan.Slug);
+                    parameters.SetCategory(options.Category != null ? options.Category : plan.Category);
+                    parameters.SetTimeout(options.Timeout);
+
+                    if(options.Image != null)
+                    {
+                        parameters.SetImage(options.Image);
+                    }
+                    else
+                    {
+                        Image? randomImage = RandomParameterGenerator.RandomImage(plan);
+
+                        if (randomImage != null)
+                        {
+                            parameters.SetImage(randomImage.Slug);
+                        }
+                        else
+                        {
+                            ExceptionHandler.Handle(new Exception($"Failed to find a single valid image for plan {plan} in region {options.Region}."));
+                        }
+                    }
+                }
+                else
+                {
+                    ExceptionHandler.Handle(new Exception($"Failed to find a single plan in region {options.Region}."));
+                }
+                return parameters;
+            }
             else
             {
-                return RandomParameterGenerator.GetRandomParameters(options.Timeout, filteredPlans);
+                return parameters;
             }
         }
 
