@@ -3,10 +3,11 @@ namespace Bezdzione
 {
     public static class TimeoutManager
     {
+        public static readonly int MINIMUM_TIMEOUT = 1;
         public static readonly int DEFAULT_TIMEOUT = 10;
         private static readonly int DEFAULT_VIRTUAL_TIMEOUT;
         private static readonly int DEFAULT_BAREMETAL_TIMEOUT;
-
+        
         static TimeoutManager()
         {
             try
@@ -22,16 +23,14 @@ namespace Bezdzione
             }
         }
 
-        public static int GetDefaultTimeout() => DEFAULT_TIMEOUT;
-
         public static int GetTimeout(int? userTimeout, string category)
         {
             switch (userTimeout)
             {
-                case <= 0:
+                case int timeout when timeout < MINIMUM_TIMEOUT:
                     ConsoleLogger.InvalidTimeout();
                     return DEFAULT_TIMEOUT;
-                case > 0:
+                case int timeout when timeout >= MINIMUM_TIMEOUT:
                     return userTimeout.Value;
                 default:
                     return SetTimeoutByCategory(category);

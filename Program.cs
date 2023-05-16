@@ -31,12 +31,7 @@ namespace Bezdzione
                     Environment.Exit(1);
                 }
                 else
-                {
-                    /*foreach (Plan plan in filteredPlans.Plans)
-                    {
-                        plan.ShowInfo();
-                        ConsoleLogger.End();
-                    }*/
+                {;
                     await TestRunner.SetUpFilteredRandomTest(serverTests, FilterPlans(allPlans, options), options);
                 }   
             }

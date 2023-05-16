@@ -50,7 +50,7 @@ namespace Bezdzione.CLI
                 ConsoleLogger.IncompatibleOptions();
                 Environment.Exit(1);
             }
-            if (options.Timeout <= 0)
+            if (options.Timeout < TimeoutManager.MINIMUM_TIMEOUT)
             {
                 ConsoleLogger.InvalidTimeout();
                 Environment.Exit(1);

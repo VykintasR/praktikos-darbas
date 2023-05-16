@@ -69,9 +69,22 @@ namespace Bezdzione.Data
 
         public PlanList GetPlansWithImage(string imageSlug)
         {
-            return Plans != null
-               ? new PlanList(Plans.Where(plan => plan.Images != null && plan.Images.Any(image => image.Slug == imageSlug)).ToList())
-               : new PlanList();
+            if (Plans != null)
+            {
+                List<Plan> plansWithImage = new List<Plan>();
+
+                foreach (var plan in Plans)
+                {
+                    if (plan.Images != null && plan.Images.Any(image => image.Slug == imageSlug))
+                    {
+                        plansWithImage.Add(plan);
+                    }
+                }
+
+                return new PlanList(plansWithImage);
+            }
+
+            return new PlanList();
         }
 
         public PlanList FilterPlansByOption(PlanList plans, string option, string value)

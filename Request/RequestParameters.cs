@@ -92,7 +92,6 @@ namespace Bezdzione.Request
             }
             else if (options.Region != null)
             {
-                
                 parameters.SetRegion(options.Region);
 
                 Plan? plan = RandomParameterGenerator.RandomPlan(filteredPlans);
@@ -126,8 +125,74 @@ namespace Bezdzione.Request
                 }
                 return parameters;
             }
-            else
+            else if (options.Category != null)
             {
+                Plan? plan = RandomParameterGenerator.RandomPlan(filteredPlans);
+
+                if (plan != null)
+                {
+                    parameters.SetPlan(plan.Slug);
+                    parameters.SetCategory(options.Category);
+                    parameters.SetTimeout(options.Timeout);
+
+                    Region? randomRegion = RandomParameterGenerator.RandomRegionFromPlan(plan);
+                    if (randomRegion != null)
+                    {
+                        parameters.SetRegion(randomRegion.Slug);
+                    }
+                    else
+                    {
+                        ExceptionHandler.Handle(new Exception($"Failed to find a single valid region of plan {plan.Slug}."));
+                    }
+
+                    if (options.Image != null)
+                    {
+                        parameters.SetImage(options.Image);
+                    }
+                    else
+                    {
+                        Image? randomImage = RandomParameterGenerator.RandomImage(plan);
+
+                        if (randomImage != null)
+                        {
+                            parameters.SetImage(randomImage.Slug);
+                        }
+                        else
+                        {
+                            ExceptionHandler.Handle(new Exception($"Failed to find a single valid image for plan {plan} in region {options.Region}."));
+                        }
+                    }
+                }
+                else
+                {
+                    ExceptionHandler.Handle(new Exception($"Failed to find a single plan in category {options.Category}."));
+                }
+                return parameters;
+            }
+            else //Only image is given
+            {
+                Plan? plan = RandomParameterGenerator.RandomPlan(filteredPlans);
+                if (plan != null)
+                {
+                    parameters.SetPlan(plan.Slug);
+                    parameters.SetCategory(plan.Category);
+                    parameters.SetTimeout(options.Timeout);
+
+                    Region? randomRegion = RandomParameterGenerator.RandomRegionFromPlan(plan);
+                    if (randomRegion != null)
+                    {
+                        parameters.SetRegion(randomRegion.Slug);
+                    }
+                    else
+                    {
+                        ExceptionHandler.Handle(new Exception($"Failed to find a single valid region of plan {plan.Slug}."));
+                    }
+                    parameters.SetImage(options.Image);
+                }
+                else
+                {
+                    ExceptionHandler.Handle(new Exception($"Failed to find a single plan with image {options.Image}."));
+                }
                 return parameters;
             }
         }
@@ -135,7 +200,7 @@ namespace Bezdzione.Request
             
         public void SetDefaultParameters(int? userTimeout, PlanList allPlans)
         {
-            Timeout = TimeoutManager.GetDefaultTimeout();
+            Timeout = TimeoutManager.DEFAULT_TIMEOUT;
             RegionList AvailableRegions = RegionList.GetAllRegions();
             if (AvailableRegions.Regions != null)
             {
@@ -183,8 +248,8 @@ namespace Bezdzione.Request
             else
             {
                 Timeout = userTimeout != null
-                    ? userTimeout <= 0 ? TimeoutManager.GetDefaultTimeout() : userTimeout.Value
-                    : TimeoutManager.GetDefaultTimeout();
+                    ? userTimeout < TimeoutManager.MINIMUM_TIMEOUT ? TimeoutManager.DEFAULT_TIMEOUT : userTimeout.Value
+                    : TimeoutManager.DEFAULT_TIMEOUT;
             }         
         }
 
