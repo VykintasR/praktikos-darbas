@@ -1,0 +1,7 @@
+{
+  "API_KEY": "string",
+  "TEAM_ID": "string",
+  "PROJECT_ID": "string",
+  "DEFAULT_VIRTUAL_TIMEOUT": int,
+  "DEFAULT_BAREMETAL_TIMEOUT": int
+}
