@@ -1,20 +1,21 @@
-﻿using Bezdzione.Logs;
-
-public static class ExceptionHandler
+﻿namespace Bezdzione.Logging
 {
-    public static void Handle(Exception ex)
+    public static class ExceptionHandler
     {
-        switch (ex)
+        public static void Handle(Exception ex)
         {
-            case AssertionException assertionEx:
-                ConsoleLogger.TestFail(assertionEx.Message);
-                break;
-            case ArgumentException argumentEx:
-                ConsoleLogger.Exception(argumentEx.Message);
-                break;
-            default:
-                ConsoleLogger.Error(ex.Message);
-                break;
+            switch (ex)
+            {
+                case AssertionException assertionEx:
+                    ConsoleLogger.TestFail(assertionEx.Message);
+                    break;
+                case ArgumentException argumentEx:
+                    ConsoleLogger.Exception(argumentEx.Message);
+                    break;
+                default:
+                    ConsoleLogger.Error(ex.Message);
+                    break;
+            }
         }
     }
 }

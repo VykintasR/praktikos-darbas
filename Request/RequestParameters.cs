@@ -1,7 +1,7 @@
 ﻿using Bezdzione.CLI;
 using Bezdzione.Data;
 using Newtonsoft.Json;
-using System.Numerics;
+using Bezdzione.Logging;
 
 namespace Bezdzione.Request
 {
@@ -28,11 +28,12 @@ namespace Bezdzione.Request
             SetDefaultParameters(userTimeout, allPlans);
         }
 
-        public RequestParameters(string? regionSlug, string? planSlug, string imageSlug, int timeout)
+        public RequestParameters(string? regionSlug, string? planSlug, string imageSlug, string category, int timeout)
         {
             SetRegion(regionSlug);
             SetPlan(planSlug);
             SetImage(imageSlug);
+            SetCategory(category);
             SetTimeout(timeout);
         }
 

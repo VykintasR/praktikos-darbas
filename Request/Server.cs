@@ -1,5 +1,5 @@
 ﻿using RestSharp;
-using Bezdzione.Logs;
+using Bezdzione.Logging;
 using Newtonsoft.Json;
 using Bezdzione.Data;
 
@@ -25,12 +25,35 @@ namespace Bezdzione.Request
             Parameters = parameters;
         }
 
-        public int Deploy()
+        public dynamic? Deploy(Result testResult)
         {
             string parameterInfo = $"region: {Parameters.RegionSlug}, plan: {Parameters.PlanSlug}, OS image: {Parameters.ImageSlug}";
-            Id = HTTPClient.DeployServer(Parameters);
-            FileLogger.Log(Id == 0 ? MessageFormatter.Error($"Failed to deploy Server with {parameterInfo}.") : MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
-            return Id;
+            RestResponse response = HTTPClient.DeployServer(Parameters);
+
+            testResult.HTTPStatusCode = (int)response.StatusCode;
+            if (!response.IsSuccessStatusCode)
+            {
+                testResult.DeploymentMessage = response.ErrorMessage ?? "Unknown error when trying to deploy the server.";
+            }
+
+            var responseJson = response.Content;
+            if (responseJson != null)
+            {
+                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
+
+                if (responseObj != null)
+                {
+                    Id = responseObj.id;
+                    FileLogger.Log(MessageFormatter.Info(MessageFormatter.RequestInfo(Parameters)));
+                    return responseObj;
+                }
+                else
+                {
+                    FileLogger.Log(MessageFormatter.Error($"Failed to deploy Server with {parameterInfo}."));
+                    return null;
+                }
+            }
+            return null;
         }
 
         public string GetState()
@@ -38,23 +61,23 @@ namespace Bezdzione.Request
             return HTTPClient.GetServerState(Id);
         }
 
-        public void UpdateInfo()
+        public dynamic? UpdateAndGetInfo()
         {
-            RestResponse response = HTTPClient.GetServerInfo(Id);
-            var responseJson = response.Content;
-            var responseObj = responseJson != null ? JsonConvert.DeserializeObject(responseJson) : (dynamic?)null;
+            dynamic? responseObj = HTTPClient.GetServerInfo(Id);
             if (responseObj != null)
             {
                 Name = responseObj.hostname;
                 Plan = responseObj.name;
                 Region = responseObj.region.slug;
                 Image = responseObj.image;
-                FileLogger.Log(MessageFormatter.ResponseInfo(responseObj, response.StatusCode));
+                FileLogger.Log(MessageFormatter.ResponseInfo(responseObj));
+                return responseObj;
             }
             else
             {
                 FileLogger.Log(MessageFormatter.Error("Failed to retrieve Server info."));
             }
+            return responseObj;
         }
 
         public RestResponse Delete()

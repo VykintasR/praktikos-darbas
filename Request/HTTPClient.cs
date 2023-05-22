@@ -36,21 +36,9 @@ namespace Bezdzione.Request
             return SendHTTPRequest(string.Format(API_URLS.GetPlanImages, Slug), Method.Get);
         }
 
-        public static int DeployServer(RequestParameters parameters)
+        public static RestResponse DeployServer(RequestParameters parameters)
         {
-            RestResponse response = SendHTTPRequest(API_URLS.RequestServer, Method.Post, parameters);
-
-            var responseJson = response.Content;
-            if (responseJson != null)
-            {
-                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
-
-                if (responseObj != null)
-                {
-                    return responseObj.id;
-                }
-            }
-            return 0;
+            return SendHTTPRequest(API_URLS.RequestServer, Method.Post, parameters);
         }
 
         public static string GetServerState(int id)
@@ -66,9 +54,21 @@ namespace Bezdzione.Request
             return "";
         }
 
-        public static RestResponse GetServerInfo(int id)
+        public static dynamic? GetServerInfo(int id)
         {
-            return SendHTTPRequest(string.Format(API_URLS.RetrieveServerInfo, id), Method.Get);
+            RestResponse response = SendHTTPRequest(string.Format(API_URLS.RetrieveServerInfo, id), Method.Get);
+
+            var responseJson = response.Content;
+            if (responseJson != null)
+            {
+                dynamic? responseObj = JsonConvert.DeserializeObject(responseJson);
+
+                if (responseObj != null)
+                {
+                    return responseObj;
+                }
+            }
+            return null;
         }
 
         public static RestResponse DeleteServer(int id)

@@ -1,7 +1,7 @@
 ﻿using Bezdzione.Data;
 using Bezdzione.CLI;
 using BezdzioneTests;
-using Bezdzione.Logs;
+using Bezdzione.Logging;
 
 namespace Bezdzione
 {
@@ -9,9 +9,7 @@ namespace Bezdzione
     {
         static async Task Main(string[] args)
         {
-
             Options options = Options.SetOptions(args);
-
             //cached plans
             PlanList allPlans = PlanList.GetAllPlans();
             ServerTests serverTests = new ServerTests(allPlans);

@@ -1,6 +1,6 @@
 ﻿using Bezdzione.Request;
 
-namespace Bezdzione.Logs
+namespace Bezdzione.Logging
 {
     public static class ConsoleLogger
     {

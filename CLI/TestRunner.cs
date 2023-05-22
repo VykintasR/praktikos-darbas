@@ -1,5 +1,5 @@
 ﻿using Bezdzione.Request;
-using Bezdzione.Logs;
+using Bezdzione.Logging;
 using Bezdzione.Data;
 using BezdzioneTests;
 using System.Reflection.Metadata.Ecma335;

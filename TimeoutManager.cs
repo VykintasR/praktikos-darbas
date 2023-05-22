@@ -1,4 +1,4 @@
-﻿using Bezdzione.Logs;
+﻿using Bezdzione.Logging;
 namespace Bezdzione
 {
     public static class TimeoutManager

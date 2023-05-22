@@ -25,7 +25,9 @@ namespace Bezdzione
                     Image? randomImage = RandomImage(randomPlan);
                     if (randomImage != null)
                     {
-                        return new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, timeout);
+                        return randomPlan.Category != null
+                            ? new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, randomPlan.Category, timeout)
+                            : new RequestParameters(randomRegion.Slug, randomPlan.Slug, randomImage.Slug, "Unknown", timeout);
                     }   
                 }
             }

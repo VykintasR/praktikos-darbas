@@ -1,4 +1,5 @@
 {
+  "DB_CONNECTION_STRING": "Server= ;Port= ;Database= User Id= ;Password= ;",
   "API_KEY": "string",
   "TEAM_ID": "string",
   "PROJECT_ID": "string",

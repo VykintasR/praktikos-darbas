@@ -1,5 +1,5 @@
 ﻿using CommandLine;
-using Bezdzione.Logs;
+using Bezdzione.Logging;
 
 namespace Bezdzione.CLI
 {
