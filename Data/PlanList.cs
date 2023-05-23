@@ -1,4 +1,5 @@
-﻿using Bezdzione.Request;
+﻿using Bezdzione.Logging;
+using Bezdzione.Request;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -34,9 +35,19 @@ namespace Bezdzione.Data
         public static PlanList GetAllPlans()
         {
             RestResponse response = HTTPClient.GetPlans();
-            string? content = response.Content;
 
-            return content == null ? new PlanList() : new PlanList(content);
+            try
+            {
+                string? content = response.Content;
+
+                return content == null ? new PlanList() : new PlanList(content);
+            }
+            catch
+            {
+                ExceptionHandler.Handle(new Exception("API is unavailable. Cannot retrieve plans."));
+                return new PlanList();
+            }
+            
         }
 
         public PlanList GetPlansFromRegion(string? regionSlug)

@@ -1,4 +1,5 @@
 ﻿using Bezdzione.Constants;
+using Bezdzione.Logging;
 using Bezdzione.Request;
 using Newtonsoft.Json;
 using RestSharp;
@@ -15,15 +16,24 @@ namespace Bezdzione.Data
 
         private RegionList(string jsonContent)
         {
-            if (jsonContent != null)
+            try
             {
-                var deserializedPlans = JsonConvert.DeserializeObject<List<Region>>(jsonContent);
-                Regions = deserializedPlans ?? new List<Region>();
+                if (jsonContent != null)
+                {
+                    var deserializedPlans = JsonConvert.DeserializeObject<List<Region>>(jsonContent);
+                    Regions = deserializedPlans ?? new List<Region>();
+                }
+                else
+                {
+                    Regions = new List<Region>();
+                }
             }
-            else
+            catch
             {
+                ExceptionHandler.Handle(new Exception("API is unavailable. Cannot get regions of plan."));
                 Regions = new List<Region>();
             }
+            
         }
 
         public static RegionList GetAllRegions()

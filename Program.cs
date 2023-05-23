@@ -12,6 +12,11 @@ namespace Bezdzione
             Options options = Options.SetOptions(args);
             //cached plans
             PlanList allPlans = PlanList.GetAllPlans();
+            if (allPlans.Plans != null && allPlans.Plans.Count == 0)
+            {
+                ExceptionHandler.Handle(new Exception("Failed to retrieve plans."));
+                Environment.Exit(1);
+            }
             ServerTests serverTests = new ServerTests(allPlans);
 
             if (options.Random)
