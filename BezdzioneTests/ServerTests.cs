@@ -42,17 +42,12 @@ namespace BezdzioneTests
             else
             {
                 ConsoleLogger.RequestInfo(Server);
-
-                await WaitForServerActiveState(timeout, testResult);
-                testResult.IsSuccessful = true;
-                UpdateResult(testResult);
-                SaveResultToDatabase(testResult);
-
+                TimeSpan testTime = await WaitForServerActiveState(timeout, testResult);
                 await Task.Delay(10000);
-                HandleServerDeletion();
+                AssertServerActive(testResult, testTime, timeout);
             }
         }
-        private async Task WaitForServerActiveState(int timeout, Result testResult)
+        private async Task<TimeSpan> WaitForServerActiveState(int timeout, Result testResult)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -70,16 +65,18 @@ namespace BezdzioneTests
                 serverState = Server.GetState();
             }
             stopwatch.Stop();
-            testResult.TestTime = stopwatch.Elapsed;
-            LogServerActivationTime(stopwatch.Elapsed);
-            AssertServerActive(stopwatch.Elapsed, timeout);
+            return stopwatch.Elapsed;
         }
 
-        private static void AssertServerActive(TimeSpan elapsed, int timeout)
+        private void AssertServerActive(Result testResult, TimeSpan time, int timeout)
         {
-            ConsoleLogger.Log(MessageFormatter.Info($"Server took {elapsed} to become active"));
-            FileLogger.Log(MessageFormatter.Info($"Server took {elapsed} to become active"));
-            Assert.That(elapsed, Is.LessThan(TimeSpan.FromMinutes(timeout)), $"Timeout. Server took {elapsed} to become active. Maximum allowed time - {timeout} minutes.");
+            LogServerActivationTime(time); 
+            testResult.IsSuccessful = true;
+            testResult.TestTime = time;
+            UpdateResult(testResult);
+            SaveResultToDatabase(testResult);
+            HandleServerDeletion();
+            Assert.That(time, Is.LessThan(TimeSpan.FromMinutes(timeout)), $"Timeout. Server took {time} to become active. Maximum allowed time - {timeout} minutes.");
         }
 
         private void HandleServerTimeout(TimeSpan time, Result testResult, int timeout)
@@ -110,7 +107,7 @@ namespace BezdzioneTests
             }
         }
 
-        private static void SaveResultToDatabase(Result testResult)
+        private void SaveResultToDatabase(Result testResult)
         {
             DatabaseConnector.SaveData(testResult);
         }

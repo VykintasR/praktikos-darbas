@@ -12,7 +12,7 @@ namespace Bezdzione.Logging
             using var connection = new NpgsqlConnection(connectionString);
             connection.Open();
 
-            string query = "INSERT INTO Tests (category, success, timeout, test_time, deployment_http_status, error_message, deployment_request_data, result_data, created_at) " +
+            string query = "INSERT INTO Tests (category, success, timeout, test_time, deployment_http_status, error_message, request_data, result_data, created_at) " +
                            "VALUES (@category, @success, @timeout, @testTime, @status, @message, @requestData, @resultData, @createdAt)";
 
             using (var command = new NpgsqlCommand(query, connection))
