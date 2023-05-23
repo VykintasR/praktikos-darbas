@@ -35,9 +35,21 @@ namespace BezdzioneTests
 
             if (deploymentResponse == null)
             {
-                Assert.Fail($"Failed to deploy Server with {parameterInfo}.");
+                string message = $"Failed to get a response when trying to deploy Server with {parameterInfo}.";
                 testResult.IsSuccessful = false;
+                testResult.DeploymentMessage = message;
+                testResult.ResponseData = JsonConvert.SerializeObject("\"HasResponse\":false");
                 DatabaseConnector.SaveData(testResult);
+                Assert.Fail(message);
+            }
+            else if (deploymentResponse.code >= 400)
+            {
+                string message = $"{deploymentResponse.message}";
+                testResult.IsSuccessful = false;
+                testResult.DeploymentMessage = deploymentResponse.message;
+                testResult.ResponseData = JsonConvert.SerializeObject(deploymentResponse);
+                DatabaseConnector.SaveData(testResult);
+                Assert.Fail(message);
             }
             else
             {
@@ -61,7 +73,7 @@ namespace BezdzioneTests
                     HandleServerTimeout(stopwatch.Elapsed, testResult, timeout);
                 }
 
-                await Task.Delay(5000);
+                await Task.Delay(1000);
                 serverState = Server.GetState();
             }
             stopwatch.Stop();
